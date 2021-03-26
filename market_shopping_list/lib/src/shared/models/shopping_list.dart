@@ -8,7 +8,7 @@ class ShoppingList {
   late String description;
   late bool is_done;
   late DateTime created_at;
-  List<PurchaseItem> productsItens = [];
+  List<PurchaseItem> productItens = [];
 
   ShoppingList({
     this.id,
@@ -38,6 +38,32 @@ class ShoppingList {
   }
 
   void addProductItem(PurchaseItem item) {
-    this.productsItens.add(item);
+    this.productItens.add(item);
+  }
+
+  String get createdAtFormatedToLocalDate {
+    DateTime date = this.created_at;
+    return '${date.day}/' + '${date.month}/' + '${date.year}';
+  }
+
+  String get productsToString {
+    StringBuffer out = StringBuffer();
+    for (PurchaseItem product in this.productItens) {
+      out.writeln(product.toString());
+    }
+    return out.toString();
+  }
+
+  @override
+  String toString() {
+    return '''ShoppingList(
+                id: ${id ?? "Empty"}, 
+                created_by: ${created_by.name}, 
+                title: $title, 
+                description: $description, 
+                is_done: $is_done,
+                created_at: $createdAtFormatedToLocalDate, 
+                productsItens: $productsToString)
+              ${"-" * 30}''';
   }
 }

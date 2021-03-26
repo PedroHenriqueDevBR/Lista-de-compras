@@ -37,4 +37,32 @@ class Family {
   void addShoppingList(ShoppingList shoppingList) {
     this.listToBuy.add(shoppingList);
   }
+
+  String get administratorsToString {
+    StringBuffer out = StringBuffer();
+    for (Person administrator in this.administrators) {
+      out.writeln(administrator.toString());
+    }
+    return out.toString();
+  }
+
+  String get listToBuyToString {
+    StringBuffer out = StringBuffer();
+    for (ShoppingList toBuy in this.listToBuy) {
+      out.writeln(toBuy.toString());
+    }
+    return out.toString();
+  }
+
+  @override
+  String toString() {
+    return '''Family
+                id: ${id ?? "Empty"}, 
+                family_id: $family_id, 
+                name: $name, 
+                password: $password, 
+                administrators: $administratorsToString, 
+                listToBuy: $listToBuyToString
+              )''';
+  }
 }

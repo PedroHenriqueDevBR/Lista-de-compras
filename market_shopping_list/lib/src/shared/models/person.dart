@@ -26,4 +26,23 @@ class Person {
   void addFamily(Family family) {
     this.families.add(family);
   }
+
+  String get familiesToString {
+    StringBuffer out = StringBuffer();
+    for (Family family in this.families) {
+      out.writeln(family.toString());
+    }
+    return out.toString();
+  }
+
+  @override
+  String toString() {
+    return '''Person(
+                id: ${id ?? "Empty"},
+                name: $name,
+                email: $email,
+                password: $password,
+                families: $familiesToString
+              )''';
+  }
 }

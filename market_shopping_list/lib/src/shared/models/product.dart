@@ -20,19 +20,14 @@ class Product {
     this.last_price = 0.0;
   }
 
-  Product copyWith({
-    dynamic? id,
-    String? name,
-    double? minimum_price,
-    double? maximum_price,
-    double? last_price,
-  }) {
-    return Product(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      minimum_price: minimum_price ?? this.minimum_price,
-      maximum_price: maximum_price ?? this.maximum_price,
-      last_price: last_price ?? this.last_price,
-    );
+  @override
+  String toString() {
+    return '''Product(
+                id: ${id ?? "Empty"}, 
+                name: $name, 
+                minimum_price: $minimum_price, 
+                maximum_price: $maximum_price, 
+                last_price: $last_price
+              )''';
   }
 }
