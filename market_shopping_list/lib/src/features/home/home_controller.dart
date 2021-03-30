@@ -1,0 +1,9 @@
+import 'package:market_shopping_list/src/shared/models/family.dart';
+
+class HomeController {
+  List<Family> families = [
+    Family(family_id: '01', name: 'Familia Lima', password: '123456'),
+    Family(family_id: '02', name: 'Familia Lima 02', password: '123456'),
+    Family(family_id: '03', name: 'Familia Lima 03', password: '123456'),
+  ];
+}
