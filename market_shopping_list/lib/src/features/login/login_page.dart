@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/features/login/login_controller.dart';
-import 'package:market_shopping_list/src/shared/utils/colors_util.dart';
-import 'package:market_shopping_list/src/shared/utils/images_reference_util.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,8 +7,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  ImageReference imageReference = ImageReference();
-  ColorUtil _colorUtil = ColorUtil();
   LoginController _controller = LoginController();
 
   @override
@@ -25,13 +21,14 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           Expanded(
             child: Container(
-              padding: EdgeInsets.all(16),
-              color: _colorUtil.bgColor,
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.all(0),
+              color: _controller.colorUtil.bgColor,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    imageReference.logo,
+                    _controller.imageReference.logo,
                     height: 100,
                     width: 100,
                   ),
@@ -49,7 +46,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          Divider(),
+          Divider(
+            height: 2,
+            color: _controller.colorUtil.primaryColor,
+          ),
           Expanded(
             child: Padding(
               padding: EdgeInsets.all(16),
@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   MaterialButton(
                     padding: EdgeInsets.all(16),
-                    color: _colorUtil.gmailColor,
+                    color: _controller.colorUtil.gmailColor,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

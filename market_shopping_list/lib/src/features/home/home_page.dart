@@ -3,8 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/features/home/home_controller.dart';
 import 'package:market_shopping_list/src/shared/models/family.dart';
-import 'package:market_shopping_list/src/shared/utils/colors_util.dart';
-import 'package:market_shopping_list/src/shared/utils/images_reference_util.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,9 +10,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  HomeController _controller = HomeController();
-  ImageReference _imageReference = ImageReference();
-  ColorUtil _color = ColorUtil();
+  late HomeController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    this._controller = HomeController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        backgroundColor: _color.secondaryColor,
+        backgroundColor: _controller.colorUtil.secondaryColor,
         onPressed: () {
           showModalBottomSheet(
             context: context,
@@ -149,7 +151,7 @@ class _HomePageState extends State<HomePage> {
       child: Row(
         children: [
           Image.asset(
-            _imageReference.logo,
+            _controller.imageReference.logo,
             width: 40,
           ),
           SizedBox(width: 16),
@@ -184,7 +186,7 @@ class _HomePageState extends State<HomePage> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: _color.secondaryColor,
+        backgroundColor: _controller.colorUtil.secondaryColor,
       ),
       title: Text(family.name),
     );
