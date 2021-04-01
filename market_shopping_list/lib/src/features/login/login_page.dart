@@ -8,10 +8,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  LoginController _controller = LoginController(personStorage: PersonRepository());
+  late LoginController _controller;
+
+  void updateState() {
+    setState(() {});
+  }
 
   @override
   void initState() {
+    _controller = LoginController(
+      personStorage: PersonRepository(),
+    );
     _controller.isLoggedPerson();
     super.initState();
   }
@@ -69,9 +76,12 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                   SizedBox(height: 8),
-                  Text(
-                    'Utilize a sua conta do Google para acessar a aplicação.',
-                    textAlign: TextAlign.center,
+                  ValueListenableBuilder(
+                    valueListenable: _controller.errorMessage,
+                    builder: (_, __, ___) => Text(
+                      _controller.errorMessage.value.isNotEmpty ? _controller.errorMessage.value : 'Utilize a sua conta do Google para acessar a aplicação.',
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ],
               ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:market_shopping_list/src/features/home/home_page.dart';
+import 'package:market_shopping_list/src/shared/exceptions/login_canceled_exception.dart';
 import 'package:market_shopping_list/src/shared/interfaces/person_storage_interface.dart';
 import 'package:market_shopping_list/src/shared/models/person.dart';
 import 'package:market_shopping_list/src/shared/utils/colors_util.dart';
@@ -11,6 +11,7 @@ class LoginController {
   late ImageReference imageReference;
   late IPersonStorage _personStorage;
   final logged = ValueNotifier<bool>(false);
+  final errorMessage = ValueNotifier<String>('');
 
   LoginController({required IPersonStorage personStorage}) {
     this.colorUtil = ColorUtil();
@@ -33,13 +34,28 @@ class LoginController {
   }
 
   void loginWithGoogle() async {
-    Person person = Person(name: 'name', email: 'email', password: 'password');
-    await _personStorage.loginPerson(person: person);
-    isLoggedPerson(); // TODO: Não está sendo apresentado se o usuário está ou não logado na tela de login
+    try {
+      Person person = await _personStorage.loginPerson(person: Person.cleanData());
+      print('Inspecionando person');
+      isLoggedPerson();
+      clearErrorMessage();
+    } on LoginCanceledException catch (error) {
+      errorMessage.value = 'Login cancelado';
+    } catch (error) {
+      errorMessage.value = 'Houve um problema, tente novamente mais tarde';
+    }
   }
 
   void signOut() async {
-    await _personStorage.signOut();
-    isLoggedPerson();
+    try {
+      await _personStorage.signOut();
+      isLoggedPerson();
+    } catch {
+      errorMessage.value = 'Ocorreu um erro, verifique a sua conexão com a internet';
+    }
+  }
+
+  void clearErrorMessage() {
+    errorMessage.value = '';
   }
 }

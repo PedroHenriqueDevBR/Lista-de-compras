@@ -2,18 +2,22 @@ import 'package:market_shopping_list/src/shared/models/family.dart';
 
 class Person {
   dynamic? id;
+  late String photoURL;
   late String name;
   late String email;
   late String password;
   List<Family> families = [];
 
   Person({
+    this.id,
+    this.photoURL = null ?? '',
     required this.name,
     required this.email,
     required this.password,
   });
 
   Person.cleanData() {
+    this.photoURL = '';
     this.name = '';
     this.email = '';
     this.password = '';
@@ -41,6 +45,7 @@ class Person {
                 id: ${id ?? "Empty"},
                 name: $name,
                 email: $email,
+                photoURL: $photoURL,
                 password: $password,
                 families: $familiesToString
               )''';
