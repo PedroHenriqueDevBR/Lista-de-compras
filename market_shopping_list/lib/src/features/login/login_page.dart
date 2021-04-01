@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/features/login/login_controller.dart';
+import 'package:market_shopping_list/src/shared/repositories/person_repository,.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -7,10 +8,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  LoginController _controller = LoginController();
+  LoginController _controller = LoginController(personStorage: PersonRepository());
 
   @override
   void initState() {
+    _controller.isLoggedPerson();
     super.initState();
   }
 
@@ -56,25 +58,14 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  MaterialButton(
-                    padding: EdgeInsets.all(16),
-                    color: _controller.colorUtil.gmailColor,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.person_outline,
-                          color: Colors.white,
-                        ),
-                        Text(
-                          'Gmail',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
-                    onPressed: () {
-                      _controller.goToHomePage(context);
+                  ValueListenableBuilder(
+                    valueListenable: _controller.logged,
+                    builder: (_, __, ___) {
+                      if (_controller.logged.value) {
+                        return endSessionButton();
+                      } else {
+                        return loginWithGoogleButton();
+                      }
                     },
                   ),
                   SizedBox(height: 8),
@@ -88,6 +79,54 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget loginWithGoogleButton() {
+    return MaterialButton(
+      padding: EdgeInsets.all(16),
+      color: _controller.colorUtil.gmailColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.person_outline,
+            color: Colors.white,
+          ),
+          Text(
+            'Gmail',
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
+      onPressed: () {
+        _controller.loginWithGoogle();
+      },
+    );
+  }
+
+  Widget endSessionButton() {
+    return MaterialButton(
+      padding: EdgeInsets.all(16),
+      color: _controller.colorUtil.gmailColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.exit_to_app_outlined,
+            color: Colors.white,
+          ),
+          Text(
+            'Encerrar sessão',
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
+      onPressed: () {
+        _controller.signOut();
+      },
     );
   }
 }
