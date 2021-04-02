@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:market_shopping_list/src/shared/models/family.dart';
 
 class Person {
@@ -50,4 +52,37 @@ class Person {
                 families: $familiesToString
               )''';
   }
+
+  List<String> getFamiliesID() {
+    List<String> out = [];
+    for (Family family in families) {
+      out.add(family.id);
+    }
+    return out;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'photoURL': photoURL,
+      'name': name,
+      'email': email,
+      'password': password,
+      'families': getFamiliesID(),
+    };
+  }
+
+  factory Person.fromMap(Map<String, dynamic> map) {
+    return Person(
+      id: map['id'],
+      photoURL: map['photoURL'],
+      name: map['name'],
+      email: map['email'],
+      password: map['password'],
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Person.fromJson(String source) => Person.fromMap(json.decode(source));
 }

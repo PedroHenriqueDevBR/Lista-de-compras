@@ -7,42 +7,43 @@ import 'package:market_shopping_list/src/shared/utils/colors_util.dart';
 import 'package:market_shopping_list/src/shared/utils/images_reference_util.dart';
 
 class LoginController {
+  BuildContext context;
   late ColorUtil colorUtil;
   late ImageReference imageReference;
   late IPersonStorage _personStorage;
   final logged = ValueNotifier<bool>(false);
   final errorMessage = ValueNotifier<String>('');
 
-  LoginController({required IPersonStorage personStorage}) {
+  LoginController({required IPersonStorage personStorage, required this.context}) {
     this.colorUtil = ColorUtil();
     this.imageReference = ImageReference();
     this._personStorage = personStorage;
   }
 
   void goToHomePage(BuildContext context) {
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (context) => HomePage(),
-      ),
+      MaterialPageRoute(builder: (context) => HomePage()),
     );
   }
 
   void isLoggedPerson() async {
-    bool response = await _personStorage.isLoggedPerson();
-    logged.value = response;
+    bool isLogged = await _personStorage.isLoggedPerson();
+    if (isLogged) {
+      goToHomePage(context);
+    }
+    logged.value = isLogged;
   }
 
   void loginWithGoogle() async {
     try {
-      Person person = await _personStorage.loginPerson(person: Person.cleanData());
-      print('Inspecionando person');
+      await _personStorage.loginPerson(person: Person.cleanData());
       isLoggedPerson();
       clearErrorMessage();
     } on LoginCanceledException catch (error) {
       errorMessage.value = 'Login cancelado';
     } catch (error) {
-      errorMessage.value = 'Houve um problema, tente novamente mais tarde';
+      errorMessage.value = 'Houve um problema, tente novamente';
     }
   }
 
@@ -50,7 +51,7 @@ class LoginController {
     try {
       await _personStorage.signOut();
       isLoggedPerson();
-    } catch {
+    } catch (e) {
       errorMessage.value = 'Ocorreu um erro, verifique a sua conexão com a internet';
     }
   }

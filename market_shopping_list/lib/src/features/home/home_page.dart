@@ -1,11 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:market_shopping_list/src/features/home/components/home_components.dart';
 import 'package:market_shopping_list/src/features/home/home_controller.dart';
 import 'package:market_shopping_list/src/features/home/pages/families/families_page.dart';
-import 'package:market_shopping_list/src/features/home/pages/home_components.dart';
 import 'package:market_shopping_list/src/features/home/pages/pendencies/pendencies_page.dart';
 import 'package:market_shopping_list/src/features/home/pages/settings/settings_page.dart';
+import 'package:market_shopping_list/src/shared/repositories/person_repository,.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -31,7 +32,10 @@ class _HomePageState extends State<HomePage> with HomeComponents {
       PendenciesPage(),
       SettingsPage(),
     ];
-    this._controller = HomeController();
+    this._controller = HomeController(
+      context: this.context,
+      personStorage: PersonRepository(),
+    );
   }
 
   @override
@@ -73,7 +77,7 @@ class _HomePageState extends State<HomePage> with HomeComponents {
               drawerItemConfigure(
                 icon: Icons.exit_to_app_outlined,
                 text: 'Encerrar sessão',
-                action: () {},
+                action: _controller.endSession,
               ),
               Divider(),
               Padding(
