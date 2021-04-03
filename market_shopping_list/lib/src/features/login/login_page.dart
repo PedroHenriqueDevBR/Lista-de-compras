@@ -49,30 +49,20 @@ class _LoginPageState extends State<LoginPage> with LoginConponent {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ValueListenableBuilder(
-                    valueListenable: _controller.logged,
+                    valueListenable: _controller.loading,
                     builder: (_, __, ___) {
-                      if (_controller.logged.value) {
-                        return loginActionButton(
-                          title: 'Encerrar sessão',
-                          icon: Icons.close_outlined,
-                          action: _controller.signOut,
-                        );
-                      } else {
-                        return loginActionButton(
-                          title: 'Gmail',
-                          icon: Icons.mail_outline,
-                          action: _controller.loginWithGoogle,
-                        );
-                      }
+                      return loginActionButton(
+                        title: 'Gmail',
+                        icon: Icons.mail_outline,
+                        action: _controller.loginWithGoogle,
+                        disable: _controller.loading.value,
+                      );
                     },
                   ),
                   SizedBox(height: 16),
-                  ValueListenableBuilder(
-                    valueListenable: _controller.errorMessage,
-                    builder: (_, __, ___) => Text(
-                      _controller.errorMessage.value.isNotEmpty ? _controller.errorMessage.value : 'Utilize a sua conta do Google para acessar a aplicação.',
-                      textAlign: TextAlign.center,
-                    ),
+                  Text(
+                    'Utilize a sua conta do Google para acessar a aplicação.',
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),

@@ -5,6 +5,7 @@ import 'package:market_shopping_list/src/shared/interfaces/person_storage_interf
 import 'package:market_shopping_list/src/shared/models/person.dart';
 import 'package:market_shopping_list/src/shared/utils/colors_util.dart';
 import 'package:market_shopping_list/src/shared/utils/images_reference_util.dart';
+import 'package:asuka/asuka.dart' as asuka;
 
 class LoginController {
   BuildContext context;
@@ -12,9 +13,12 @@ class LoginController {
   late ImageReference imageReference;
   late IPersonStorage _personStorage;
   final logged = ValueNotifier<bool>(false);
-  final errorMessage = ValueNotifier<String>('');
+  final loading = ValueNotifier<bool>(false);
 
-  LoginController({required IPersonStorage personStorage, required this.context}) {
+  LoginController({
+    required IPersonStorage personStorage,
+    required this.context,
+  }) {
     this.colorUtil = ColorUtil();
     this.imageReference = ImageReference();
     this._personStorage = personStorage;
@@ -36,15 +40,17 @@ class LoginController {
   }
 
   void loginWithGoogle() async {
+    loading.value = true;
     try {
       await _personStorage.loginPerson(person: Person.cleanData());
+      loading.value = false;
       isLoggedPerson();
-      clearErrorMessage();
     } on LoginCanceledException catch (error) {
-      errorMessage.value = 'Login cancelado';
+      showMessage('Login cancelado');
     } catch (error) {
-      errorMessage.value = 'Houve um problema, tente novamente';
+      showMessage('Houve um problema, tente novamente');
     }
+    loading.value = false;
   }
 
   void signOut() async {
@@ -52,11 +58,11 @@ class LoginController {
       await _personStorage.signOut();
       isLoggedPerson();
     } catch (e) {
-      errorMessage.value = 'Ocorreu um erro, verifique a sua conexão com a internet';
+      showMessage('Ocorreu um erro, verifique a sua conexão com a internet');
     }
   }
 
-  void clearErrorMessage() {
-    errorMessage.value = '';
+  void showMessage(String message) {
+    asuka.AsukaSnackbar.warning(message).show();
   }
 }

@@ -14,56 +14,53 @@ class _FamiliesPageState extends State<FamiliesPage> {
 
   Widget _familyCardItem(Family family) {
     return Card(
+      elevation: 2.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      color: Colors.blueGrey[50],
       child: Container(
+        height: 130,
         decoration: BoxDecoration(
           image: DecorationImage(
-            alignment: Alignment.center,
             fit: BoxFit.cover,
-            image: NetworkImage('https://images.pexels.com/photos/1724888/pexels-photo-1724888.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'),
+            image: NetworkImage('https://images.pexels.com/photos/4194857/pexels-photo-4194857.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'),
           ),
         ),
-        height: 130,
-        child: ClipRRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    family.name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      shadows: <Shadow>[
-                        Shadow(
-                          offset: Offset.zero,
-                          blurRadius: 4.0,
-                          color: Colors.black,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    'Grupo pertencente a ${family.name}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      shadows: <Shadow>[
-                        Shadow(
-                          offset: Offset(0, 0),
-                          blurRadius: 4.0,
-                          color: Colors.black,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+        child: Row(
+          children: [
+            Container(
+              width: 8.0,
+              decoration: BoxDecoration(
+                color: _controller.colorUtil.secondaryColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  bottomLeft: Radius.circular(8),
+                ),
               ),
             ),
-          ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      family.name,
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    Text(
+                      'Grupo pertencente a ${family.name}',
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -17,7 +17,7 @@ dependencies:
   firebase_auth: ^1.0.1
   cloud_firestore: ^1.0.3
   google_sign_in: ^5.0.1
-
+  asuka: ^2.0.0-nullsafety.2
 
 dev_dependencies:
   flutter_test:
