@@ -22,7 +22,6 @@ class _LoginPageState extends State<LoginPage> with LoginConponent {
       personStorage: PersonRepository(),
       context: this.context,
     );
-    _controller.isLoggedPerson();
   }
 
   @override

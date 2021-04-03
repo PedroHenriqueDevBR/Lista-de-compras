@@ -6,9 +6,9 @@ class FamiliesController {
   late ColorUtil colorUtil;
   late ImageReference imageReference;
   List<Family> families = [
-    Family(family_id: '01', name: 'Familia Lima', password: '123456'),
-    Family(family_id: '02', name: 'Familia Lima 02', password: '123456'),
-    Family(family_id: '03', name: 'Familia Lima 03', password: '123456'),
+    Family(family_id: '01', name: 'Familia 01', password: '123456'),
+    Family(family_id: '02', name: 'Familia 02', password: '123456'),
+    Family(family_id: '03', name: 'Familia 03', password: '123456'),
   ];
 
   FamiliesController() {

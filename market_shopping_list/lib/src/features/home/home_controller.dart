@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:market_shopping_list/src/features/login/login_page.dart';
+import 'package:market_shopping_list/src/features/splash/splash_page.dart';
 import 'package:market_shopping_list/src/shared/interfaces/person_storage_interface.dart';
 import 'package:market_shopping_list/src/shared/models/family.dart';
 import 'package:market_shopping_list/src/shared/utils/colors_util.dart';
@@ -33,7 +34,7 @@ class HomeController {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => LoginPage(),
+          builder: (context) => SplashPage(),
         ),
         (route) => false,
       );
