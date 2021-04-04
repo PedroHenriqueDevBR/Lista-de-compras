@@ -8,8 +8,17 @@ import 'package:asuka/asuka.dart' as asuka;
 class AppWidget extends StatelessWidget {
   ColorUtil _colorUtil = ColorUtil();
 
+  void changeNavigatorColor() {
+    dynamic systemTheme = SystemUiOverlayStyle.dark.copyWith(
+      statusBarColor: _colorUtil.primaryColor,
+      systemNavigationBarColor: _colorUtil.primaryColor,
+    );
+    SystemChrome.setSystemUIOverlayStyle(systemTheme);
+  }
+
   @override
   Widget build(BuildContext context) {
+    changeNavigatorColor();
     return MaterialApp(
       builder: asuka.builder,
       navigatorObservers: [asuka.asukaHeroController],
@@ -17,7 +26,6 @@ class AppWidget extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         appBarTheme: _appBarTheme(),
-        brightness: Brightness.light,
       ),
       home: SplashPage(),
     );
@@ -28,6 +36,7 @@ class AppWidget extends StatelessWidget {
       actionsIconTheme: IconThemeData(color: Colors.white),
       backgroundColor: _colorUtil.primaryColor,
       iconTheme: IconThemeData(color: Colors.white),
+      brightness: Brightness.dark,
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/features/login/components/login_component.dart';
 import 'package:market_shopping_list/src/features/login/login_controller.dart';
-import 'package:market_shopping_list/src/shared/repositories/person_repository,.dart';
+import 'package:market_shopping_list/src/shared/repositories/person_repository.dart';
 
 class LoginPage extends StatefulWidget {
   @override

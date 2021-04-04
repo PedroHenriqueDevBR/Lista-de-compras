@@ -1,0 +1,1 @@
+class UserNotLoggedInException implements Exception {}

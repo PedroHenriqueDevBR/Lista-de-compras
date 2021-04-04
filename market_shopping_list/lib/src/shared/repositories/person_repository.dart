@@ -5,7 +5,9 @@ import 'package:market_shopping_list/src/shared/exceptions/base_exception.dart';
 import 'package:market_shopping_list/src/shared/exceptions/data_not_found_exception.dart';
 import 'package:market_shopping_list/src/shared/exceptions/login_canceled_exception.dart';
 import 'package:market_shopping_list/src/shared/exceptions/login_error_exception.dart';
+import 'package:market_shopping_list/src/shared/exceptions/user_not_logged_in_exception.dart';
 import 'package:market_shopping_list/src/shared/interfaces/person_storage_interface.dart';
+import 'package:market_shopping_list/src/shared/models/family.dart';
 import 'package:market_shopping_list/src/shared/models/person.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:market_shopping_list/src/shared/repositories/database_reference_model.dart';
@@ -107,5 +109,39 @@ class PersonRepository implements IPersonStorage {
       return false;
     }
     return true;
+  }
+
+  @override
+  Future<Person> getLoggedPerson() async {
+    try {
+      User? user = await _auth.currentUser;
+      if (user == null) {
+        throw UserNotLoggedInException();
+      }
+      return Person(
+        id: user.uid,
+        name: user.displayName ?? '',
+        email: user.email ?? '',
+        password: '',
+        photoURL: user.photoURL ?? '',
+      );
+    } catch (e) {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<Person> addFamilyToPerson({
+    required Person personRequest,
+    required Family family,
+  }) async {
+    personRequest.addFamily(family);
+    QuerySnapshot snapshot = await _firestore.collection(_databaseReference.personCollection).where('id', isEqualTo: personRequest.id).get();
+    List<QueryDocumentSnapshot> documentSnapshotList = snapshot.docs;
+    if (documentSnapshotList.isEmpty) {
+      throw DataNotFoundException(dataName: 'person.id not found on firebase');
+    }
+    // TODO: Deve cadastrar a família no person
+    return personRequest;
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/features/splash/splash_controller.dart';
-import 'package:market_shopping_list/src/shared/repositories/person_repository,.dart';
+import 'package:market_shopping_list/src/shared/repositories/person_repository.dart';
 
 class SplashPage extends StatefulWidget {
   @override

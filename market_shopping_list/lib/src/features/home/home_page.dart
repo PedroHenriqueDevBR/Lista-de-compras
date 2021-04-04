@@ -6,7 +6,7 @@ import 'package:market_shopping_list/src/features/home/home_controller.dart';
 import 'package:market_shopping_list/src/features/home/pages/families/families_page.dart';
 import 'package:market_shopping_list/src/features/home/pages/pendencies/pendencies_page.dart';
 import 'package:market_shopping_list/src/features/home/pages/settings/settings_page.dart';
-import 'package:market_shopping_list/src/shared/repositories/person_repository,.dart';
+import 'package:market_shopping_list/src/shared/repositories/person_repository.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> with HomeComponents {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text('Famílias'),
+        foregroundColor: Colors.indigo,
       ),
       body: _pages[_currentIndex],
       drawer: Drawer(
@@ -89,37 +90,6 @@ class _HomePageState extends State<HomePage> with HomeComponents {
             ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: _controller.colorUtil.secondaryColor,
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8.0),
-                topRight: Radius.circular(8.0),
-              ),
-            ),
-            builder: (context) => Wrap(
-              children: [
-                Column(
-                  children: [
-                    ListTile(
-                      title: Text('Criar família'),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      title: Text('Entrar em uma família'),
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
       ),
     );
   }

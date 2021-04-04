@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:market_shopping_list/src/shared/models/person.dart';
 import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
 
@@ -6,7 +8,7 @@ class Family {
   late String family_id;
   late String name;
   late String password;
-  List<Person> administrators = [];
+  List<String> administrators = [];
   List<ShoppingList> listToBuy = [];
 
   Family({
@@ -22,7 +24,7 @@ class Family {
     this.password = '';
   }
 
-  void setAdministrators(List<Person> administratorList) {
+  void setAdministrators(List<String> administratorList) {
     this.administrators = administratorList;
   }
 
@@ -30,8 +32,8 @@ class Family {
     this.listToBuy = listToBuyList;
   }
 
-  void addAdministrator(Person person) {
-    this.administrators.add(person);
+  void addAdministrator(String personID) {
+    this.administrators.add(personID);
   }
 
   void addShoppingList(ShoppingList shoppingList) {
@@ -40,8 +42,8 @@ class Family {
 
   String get administratorsToString {
     StringBuffer out = StringBuffer();
-    for (Person administrator in this.administrators) {
-      out.writeln(administrator.toString());
+    for (String administratorID in this.administrators) {
+      out.writeln(administratorID);
     }
     return out.toString();
   }
@@ -65,4 +67,28 @@ class Family {
                 listToBuy: $listToBuyToString
               )''';
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'family_id': family_id,
+      'name': name,
+      'password': password,
+      'administrators': administrators,
+      'listToBuy': listToBuy,
+    };
+  }
+
+  factory Family.fromMap(Map<String, dynamic> map) {
+    return Family(
+      id: map['id'],
+      family_id: map['family_id'],
+      name: map['name'],
+      password: map['password'],
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Family.fromJson(String source) => Family.fromMap(json.decode(source));
 }

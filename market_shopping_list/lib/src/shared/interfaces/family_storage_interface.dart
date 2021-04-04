@@ -2,7 +2,7 @@ import 'package:market_shopping_list/src/shared/models/family.dart';
 import 'package:market_shopping_list/src/shared/models/person.dart';
 
 abstract class IFamilyStorage {
-  Future<List<Family>> selectAllFamiliesByPerson({required Person person});
+  Future<List<Family>> selectAllFamiliesFromPerson({required Person person});
 
   Future<Family> registerFamily({required Family family});
 
