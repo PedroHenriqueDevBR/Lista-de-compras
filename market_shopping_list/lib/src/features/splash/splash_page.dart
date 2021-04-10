@@ -23,24 +23,40 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _controller.colorUtil.bgColor,
-      body: Center(
-        child: Wrap(
-          direction: Axis.vertical,
-          alignment: WrapAlignment.center,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.all(22.0),
-              width: 150,
-              child: Image.asset(_controller.imageReference.logo),
+      appBar: AppBar(
+        elevation: 0.0,
+      ),
+      body: ValueListenableBuilder(
+        valueListenable: _controller.isDone,
+        builder: (_, bool isDone, ___) {
+          return AnimatedContainer(
+            duration: Duration(milliseconds: 750),
+            curve: Curves.easeOutQuint,
+            width: MediaQuery.of(context).size.width,
+            height: isDone ? 0 : MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              color: _controller.colorUtil.primaryColor,
             ),
-            SizedBox(height: 8),
-            CircularProgressIndicator(),
-            SizedBox(height: 8),
-            Text('Carregando...'),
-          ],
-        ),
+            child: isDone
+                ? Container()
+                : Center(
+                    child: Wrap(
+                      direction: Axis.vertical,
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(22.0),
+                          width: 160,
+                          child: Image.asset(_controller.imageReference.logo),
+                        ),
+                        CircularProgressIndicator.adaptive(),
+                        SizedBox(height: 16.0),
+                      ],
+                    ),
+                  ),
+          );
+        },
       ),
     );
   }

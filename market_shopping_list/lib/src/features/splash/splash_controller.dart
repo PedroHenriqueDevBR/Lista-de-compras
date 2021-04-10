@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/features/home/home_page.dart';
@@ -11,6 +13,7 @@ class SplashController {
   late ImageReference imageReference;
   late ColorUtil colorUtil;
   late IPersonStorage _personStorage;
+  ValueNotifier<bool> isDone = ValueNotifier<bool>(false);
 
   SplashController({required this.context, required IPersonStorage personStorage}) {
     imageReference = ImageReference();
@@ -33,11 +36,16 @@ class SplashController {
   }
 
   void isLoggedPerson() async {
-    bool isLogged = await _personStorage.isLoggedPerson();
-    if (isLogged) {
-      goToHomePage();
-    } else {
-      goToLoginPage();
-    }
+    Timer(Duration(milliseconds: 1500), () async {
+      bool isLogged = await _personStorage.isLoggedPerson();
+      isDone.value = true;
+      Timer(Duration(milliseconds: 750), () {
+        if (isLogged) {
+          goToHomePage();
+        } else {
+          goToLoginPage();
+        }
+      });
+    });
   }
 }
