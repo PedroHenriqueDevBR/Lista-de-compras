@@ -1,12 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/features/home/components/home_components.dart';
 import 'package:market_shopping_list/src/features/home/home_controller.dart';
 import 'package:market_shopping_list/src/features/home/pages/families/families_page.dart';
 import 'package:market_shopping_list/src/features/home/pages/pendencies/pendencies_page.dart';
 import 'package:market_shopping_list/src/features/home/pages/settings/settings_page.dart';
-import 'package:market_shopping_list/src/shared/repositories/person_repository.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -32,9 +29,7 @@ class _HomePageState extends State<HomePage> with HomeComponents {
       PendenciesPage(),
       SettingsPage(),
     ];
-    this._controller = HomeController(
-      context: this.context
-    );
+    this._controller = HomeController(context: this.context);
   }
 
   @override
@@ -85,11 +80,15 @@ class _HomePageState extends State<HomePage> with HomeComponents {
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Text('Famílias'),
               ),
-              ValueListenableBuilder(valueListenable: _controller.families, builder: (context, value, child) => Column(
-                children: [
-                  ...getFamilieListForDrawer(families: _controller.families.value),
-                ],
-              ),),
+              ValueListenableBuilder(
+                valueListenable: _controller.families,
+                builder: (context, value, child) => Column(
+                  children: [
+                    ...getFamilieListForDrawer(
+                        families: _controller.families.value),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

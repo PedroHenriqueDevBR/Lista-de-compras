@@ -26,6 +26,7 @@ class FamilyRepository implements IFamilyStorage {
       CollectionReference familyCollection = await _firestore.collection(_databaseReference.familyCollection);
       DocumentReference familyDocument = await familyCollection.add(family.toMap());
       family.id = familyDocument.id;
+      await _personStorage.addFamilyToPerson(personRequest: loggedPerson, family: family);
       return family;
     } on UserNotLoggedInException {
       throw UserNotLoggedInException();
@@ -38,12 +39,16 @@ class FamilyRepository implements IFamilyStorage {
   Future<List<Family>> selectAllFamiliesFromPerson({required Person person}) async {
     try {
       List<Family> families = [];
-      QuerySnapshot snapshot = await _firestore.collection(_databaseReference.familyCollection).get();
-      for (QueryDocumentSnapshot itemData in snapshot.docs) {
-        if (itemData.exists) {
-          Family family = Family.fromMap(itemData.data()!);
-          family.id = itemData.id;
-          families.add(family);
+      for (Family family in person.families) {
+        QuerySnapshot snapshot = await _firestore.collection(_databaseReference.familyCollection)
+            .where('family_id', isEqualTo: family.family_id)
+            .get();
+        for (QueryDocumentSnapshot itemData in snapshot.docs) {
+          if (itemData.exists) {
+            Family family = Family.fromMap(itemData.data()!);
+            family.id = itemData.id;
+            families.add(family);
+          }
         }
       }
       return families;

@@ -34,6 +34,7 @@ class HomeController {
     List<Family> familiesResponse = await _familyStorage.selectAllFamiliesFromPerson(person: person);
     families.value = familiesResponse;
     families.notifyListeners();
+    // TODO: Deve pegar esses dados de um lugar centralizado para evitar problemas
   }
 
   void endSession() async {

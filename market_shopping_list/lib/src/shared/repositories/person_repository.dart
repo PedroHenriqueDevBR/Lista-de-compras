@@ -136,12 +136,22 @@ class PersonRepository implements IPersonStorage {
     required Family family,
   }) async {
     personRequest.addFamily(family);
-    QuerySnapshot snapshot = await _firestore.collection(_databaseReference.personCollection).where('id', isEqualTo: personRequest.id).get();
-    List<QueryDocumentSnapshot> documentSnapshotList = snapshot.docs;
-    if (documentSnapshotList.isEmpty) {
+    QuerySnapshot personSnapshot = await _firestore.collection(_databaseReference.personCollection).where('id', isEqualTo: personRequest.id).get();
+    List<QueryDocumentSnapshot> personDocumentSnapshotList = personSnapshot.docs;
+    if (personDocumentSnapshotList.isEmpty) {
       throw DataNotFoundException(dataName: 'person.id not found on firebase');
+    } else {
+      try {
+        if (personSnapshot.docs.first.exists) {
+          QueryDocumentSnapshot queryDocumentSnapshot = personSnapshot.docs.first;
+          String documentID = queryDocumentSnapshot.id;
+          await _firestore.collection(_databaseReference.personCollection).doc(documentID).set(personRequest.toMap());
+        }
+      } catch(error) {
+        print(error);
+        throw Exception();
+      }
     }
-    // TODO: Deve cadastrar a família no person
     return personRequest;
   }
 }
