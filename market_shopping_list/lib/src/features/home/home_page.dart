@@ -33,8 +33,7 @@ class _HomePageState extends State<HomePage> with HomeComponents {
       SettingsPage(),
     ];
     this._controller = HomeController(
-      context: this.context,
-      personStorage: PersonRepository(),
+      context: this.context
     );
   }
 
@@ -86,7 +85,11 @@ class _HomePageState extends State<HomePage> with HomeComponents {
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Text('Famílias'),
               ),
-              ...getFamilieListForDrawer(families: _controller.families),
+              ValueListenableBuilder(valueListenable: _controller.families, builder: (context, value, child) => Column(
+                children: [
+                  ...getFamilieListForDrawer(families: _controller.families.value),
+                ],
+              ),),
             ],
           ),
         ),
