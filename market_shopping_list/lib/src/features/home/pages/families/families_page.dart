@@ -29,18 +29,29 @@ class _FamiliesPageState extends State<FamiliesPage> with FamiliesComponents {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: ValueListenableBuilder(
-        valueListenable: _controller.families,
-        builder: (_, __, ___) {
-          if (_controller.families.value.length == 0) {
-            return Center(child: Text('Nenhuma família cadastrada'));
-          } else {
-            return ListView.builder(
-              itemCount: _controller.families.value.length,
-              padding: EdgeInsets.all(8),
-              physics: BouncingScrollPhysics(),
-              itemBuilder: (context, index) {
-                return familyCardItem(family: _controller.families.value[index]);
+        valueListenable: _controller.loadDataFromDatabaseIsDone,
+        builder: (context, bool value, child) {
+          if (value) {
+            return ValueListenableBuilder(
+              valueListenable: _controller.families,
+              builder: (_, __, ___) {
+                if (_controller.families.value.length == 0) {
+                  return Center(child: Text('Nenhuma família cadastrada'));
+                } else {
+                  return ListView.builder(
+                    itemCount: _controller.families.value.length,
+                    padding: EdgeInsets.all(8),
+                    physics: BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return familyCardItem(family: _controller.families.value[index]);
+                    },
+                  );
+                }
               },
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
             );
           }
         },

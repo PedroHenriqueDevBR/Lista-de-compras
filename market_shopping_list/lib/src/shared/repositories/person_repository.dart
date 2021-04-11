@@ -32,7 +32,6 @@ class PersonRepository implements IPersonStorage {
         await registerPerson(person: person);
         return person;
       } catch (error) {
-        print(error);
         throw Exception();
       }
     } on LoginCanceledException catch (error) {
@@ -40,16 +39,6 @@ class PersonRepository implements IPersonStorage {
     } catch (error) {
       return throw Exception();
     }
-  }
-
-  Person setPersonFromCredencial(UserCredential credential) {
-    return Person(
-      id: credential.user?.uid ?? null,
-      name: credential.user?.displayName ?? '',
-      email: credential.user?.email ?? '',
-      password: '',
-      photoURL: credential.user?.photoURL ?? '',
-    );
   }
 
   @override
@@ -70,25 +59,21 @@ class PersonRepository implements IPersonStorage {
     }
   }
 
-  @override
-  Future<void> signOut() async {
-    if (await isLoggedPerson()) {
-      await _auth.signOut();
-    } else {
-      throw BaseException(message: 'Usuário não logado');
-    }
-  }
-
-  @override
-  Future<bool> isLoggedPerson() async {
-    return await _auth.currentUser != null ? true : false;
+  Person setPersonFromCredencial(UserCredential credential) {
+    return Person(
+      id: credential.user?.uid ?? null,
+      name: credential.user?.displayName ?? '',
+      email: credential.user?.email ?? '',
+      password: '',
+      photoURL: credential.user?.photoURL ?? '',
+    );
   }
 
   @override
   Future<Person> registerPerson({required Person person}) async {
     try {
       if (await validPersonToRegister(person)) {
-        _firestore.collection(_databaseReference.personCollection).add(person.toMap());
+        _firestore.collection(_databaseReference.personCollection).doc(person.id).set(person.toMap());
       }
       return person;
     } catch (error) {
@@ -98,14 +83,10 @@ class PersonRepository implements IPersonStorage {
 
   Future<bool> validPersonToRegister(Person person) async {
     if (person.id == null) {
-      print('Person ID is null');
-      print(person.toString());
       return false;
     }
     QuerySnapshot snapshot = await _firestore.collection(_databaseReference.personCollection).where('id', isEqualTo: person.id).get();
     if (snapshot.docs.length > 0) {
-      print('Registered Person');
-      print('firestore id: ${snapshot.docs.first.id}');
       return false;
     }
     return true;
@@ -118,16 +99,44 @@ class PersonRepository implements IPersonStorage {
       if (user == null) {
         throw UserNotLoggedInException();
       }
-      return Person(
+      Person person = Person(
         id: user.uid,
         name: user.displayName ?? '',
         email: user.email ?? '',
         password: '',
         photoURL: user.photoURL ?? '',
       );
+      person.families = await formatFamiliesFromPerson(person);
+      return person;
     } catch (e) {
       throw Exception();
     }
+  }
+
+  Future<List<Family>> formatFamiliesFromPerson(Person person) async {
+    List<Family> familiesFromPerson = [];
+
+    try {
+      CollectionReference personCollection = await _firestore.collection(_databaseReference.personCollection);
+      DocumentSnapshot personDocumentSnapshot = await personCollection.doc(person.id).get();
+      if (personDocumentSnapshot.exists) {
+        Map<String, dynamic>? personData = personDocumentSnapshot.data();
+        for (var familyID in personData!['families']) {
+          Family family = Family.cleanData();
+          family.id = familyID;
+          familiesFromPerson.add(family);
+        }
+      }
+    } catch (error) {
+      throw Exception();
+    }
+
+    return familiesFromPerson;
+  }
+
+  @override
+  Future<bool> isLoggedPerson() async {
+    return await _auth.currentUser != null ? true : false;
   }
 
   @override
@@ -135,23 +144,25 @@ class PersonRepository implements IPersonStorage {
     required Person personRequest,
     required Family family,
   }) async {
-    personRequest.addFamily(family);
-    QuerySnapshot personSnapshot = await _firestore.collection(_databaseReference.personCollection).where('id', isEqualTo: personRequest.id).get();
-    List<QueryDocumentSnapshot> personDocumentSnapshotList = personSnapshot.docs;
-    if (personDocumentSnapshotList.isEmpty) {
-      throw DataNotFoundException(dataName: 'person.id not found on firebase');
+    if (personRequest.id == null) {
+      throw DataNotFoundException(dataName: 'Person.id cant be null');
     } else {
+      personRequest.addFamily(family);
       try {
-        if (personSnapshot.docs.first.exists) {
-          QueryDocumentSnapshot queryDocumentSnapshot = personSnapshot.docs.first;
-          String documentID = queryDocumentSnapshot.id;
-          await _firestore.collection(_databaseReference.personCollection).doc(documentID).set(personRequest.toMap());
-        }
-      } catch(error) {
-        print(error);
-        throw Exception();
+        await _firestore.collection(_databaseReference.personCollection).doc(personRequest.id).update(personRequest.toMap());
+      } catch (error) {
+        Exception();
       }
     }
     return personRequest;
+  }
+
+  @override
+  Future<void> signOut() async {
+    if (await isLoggedPerson()) {
+      await _auth.signOut();
+    } else {
+      throw BaseException(message: 'Not logged person');
+    }
   }
 }

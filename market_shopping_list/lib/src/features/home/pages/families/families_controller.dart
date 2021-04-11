@@ -17,6 +17,7 @@ class FamiliesController {
   Family familyToSave = Family.cleanData();
   ValueNotifier<List<Family>> families = ValueNotifier<List<Family>>([]);
   ValueNotifier<bool> loading = ValueNotifier<bool>(false);
+  ValueNotifier<bool> loadDataFromDatabaseIsDone = ValueNotifier<bool>(false);
 
   FamiliesController({
     required this.context,
@@ -44,11 +45,14 @@ class FamiliesController {
 
   void getFamiliesFromDatabase() async {
     try {
-      List<Family> familiesResponse = await _familyStorage.selectAllFamiliesFromPerson(person: Person.cleanData());
+      Person person = await _personStorage.getLoggedPerson();
+      List<Family> familiesResponse = await _familyStorage.selectAllFamiliesFromPerson(person: person);
       this.families.value = familiesResponse;
     } catch (e) {
       print(e);
       asuka.AsukaSnackbar.message('Ocorreu um erro interno ao buscar as famílias');
+    } finally {
+      loadDataFromDatabaseIsDone.value = true;
     }
   }
 

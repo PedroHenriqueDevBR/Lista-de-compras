@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:market_shopping_list/src/shared/exceptions/data_not_found_exception.dart';
 import 'package:market_shopping_list/src/shared/exceptions/user_not_logged_in_exception.dart';
 import 'package:market_shopping_list/src/shared/interfaces/family_storage_interface.dart';
 import 'package:market_shopping_list/src/shared/interfaces/person_storage_interface.dart';
@@ -37,23 +38,23 @@ class FamilyRepository implements IFamilyStorage {
 
   @override
   Future<List<Family>> selectAllFamiliesFromPerson({required Person person}) async {
-    try {
-      List<Family> families = [];
-      for (Family family in person.families) {
-        QuerySnapshot snapshot = await _firestore.collection(_databaseReference.familyCollection)
-            .where('family_id', isEqualTo: family.family_id)
-            .get();
-        for (QueryDocumentSnapshot itemData in snapshot.docs) {
-          if (itemData.exists) {
-            Family family = Family.fromMap(itemData.data()!);
-            family.id = itemData.id;
+    if (person.id == null) {
+      throw DataNotFoundException(dataName: 'Person.id cant be null');
+    } else {
+      try {
+        List<Family> families = [];
+        for (Family family in person.families) {
+          DocumentSnapshot familyDocumentSnapshot = await _firestore.collection(_databaseReference.familyCollection).doc(family.id).get();
+          if (familyDocumentSnapshot.exists) {
+            Family family = Family.fromMap(familyDocumentSnapshot.data()!);
+            family.id = familyDocumentSnapshot.id;
             families.add(family);
           }
         }
+        return families;
+      } catch (e) {
+        throw Exception();
       }
-      return families;
-    } catch (e) {
-      throw Exception();
     }
   }
 
