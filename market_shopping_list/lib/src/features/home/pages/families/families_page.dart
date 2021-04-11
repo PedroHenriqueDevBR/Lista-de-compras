@@ -2,6 +2,8 @@ import 'package:asuka/asuka.dart' as asuka;
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/features/home/pages/families/components/families_components.dart';
 import 'package:market_shopping_list/src/features/home/pages/families/families_controller.dart';
+import 'package:market_shopping_list/src/shared/components/family_card_component.dart';
+import 'package:market_shopping_list/src/shared/models/family.dart';
 import 'package:market_shopping_list/src/shared/repositories/family_repository.dart';
 import 'package:market_shopping_list/src/shared/repositories/person_repository.dart';
 
@@ -27,7 +29,6 @@ class _FamiliesPageState extends State<FamiliesPage> with FamiliesComponents {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
       body: ValueListenableBuilder(
         valueListenable: _controller.loadDataFromDatabaseIsDone,
         builder: (context, bool value, child) {
@@ -40,10 +41,16 @@ class _FamiliesPageState extends State<FamiliesPage> with FamiliesComponents {
                 } else {
                   return ListView.builder(
                     itemCount: _controller.families.value.length,
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(4.0),
                     physics: BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
-                      return familyCardItem(family: _controller.families.value[index]);
+                      Family family = _controller.families.value[index];
+                      return GestureDetector(
+                        onTap: () {
+                          _controller.goToShowFamilyPage(family);
+                        },
+                        child: FamilyCardComponent(family: family),
+                      );
                     },
                   );
                 }

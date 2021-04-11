@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:market_shopping_list/src/features/show_family/show_family_page.dart';
 import 'package:market_shopping_list/src/shared/interfaces/family_storage_interface.dart';
 import 'package:market_shopping_list/src/shared/interfaces/person_storage_interface.dart';
 import 'package:market_shopping_list/src/shared/models/family.dart';
@@ -37,7 +38,6 @@ class FamiliesController {
     try {
       person = await _personStorage.getLoggedPerson();
     } catch (e) {
-      print(e);
       asuka.AsukaSnackbar.message('Ocorreu um erro interno');
     }
     return person;
@@ -91,5 +91,15 @@ class FamiliesController {
     out.write('${familyToSave.name.replaceAll(' ', '_')}-');
     out.write('${time}');
     return out.toString();
+  }
+
+  void goToShowFamilyPage(Family family) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (context) => ShowFamilyPage(family: family),
+      ),
+    );
   }
 }
