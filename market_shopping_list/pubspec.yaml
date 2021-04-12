@@ -45,6 +45,9 @@ flutter:
     - static/images/logo.png
     - static/images/mercado.png
     - static/images/teste.png
+    - static/images/purple-bruch.jpg
+    - static/images/purple-sky.jpg
+    - static/images/universe.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

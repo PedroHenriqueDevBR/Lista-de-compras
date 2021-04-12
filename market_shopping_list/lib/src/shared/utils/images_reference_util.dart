@@ -1,10 +1,15 @@
 class ImageReference {
-  String presentation = 'static/images/apresentacao.png';
-  String bio = 'static/images/bio.png';
-  String calendar = 'static/images/calendario.png';
-  String shoppingCart = 'static/images/carrinho-de-compras.png';
-  String shoppingBasket = 'static/images/cesta-de-compras.png';
-  String logo = 'static/images/logo.png';
-  String market = 'static/images/mercado.png';
-  String test = 'static/images/teste.png';
+  static const String base = 'static/images';
+
+  String presentation = '${base}/apresentacao.png';
+  String bio = '${base}/bio.png';
+  String calendar = '${base}/calendario.png';
+  String shoppingCart = '${base}/carrinho-de-compras.png';
+  String shoppingBasket = '${base}/cesta-de-compras.png';
+  String logo = '${base}/logo.png';
+  String market = '${base}/mercado.png';
+  String test = '${base}/teste.png';
+  String purpleSky = '${base}/purple-sky.jpg';
+  String purpleBruch = '${base}/purple-bruch.jpg';
+  String universe = '${base}/universe.jpg';
 }

@@ -24,7 +24,8 @@ class AppWidget extends StatelessWidget {
       navigatorObservers: [asuka.asukaHeroController],
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.indigo,
+        primaryColor: _colorUtil.primaryColor,
         appBarTheme: _appBarTheme(),
         brightness: Brightness.light,
       ),

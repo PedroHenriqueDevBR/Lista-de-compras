@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/shared/models/family.dart';
+import 'package:market_shopping_list/src/shared/utils/images_reference_util.dart';
 
 class FamilyCardComponent extends StatelessWidget {
   Family family;
+  ImageReference _imageReference = ImageReference();
 
   FamilyCardComponent({required this.family});
 
@@ -22,7 +24,7 @@ class FamilyCardComponent extends StatelessWidget {
                   topRight: Radius.circular(4.0),
                 ),
                 image: DecorationImage(
-                  image: NetworkImage('https://images.pexels.com/photos/34090/pexels-photo.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'),
+                  image: AssetImage(_imageReference.purpleSky),
                   fit: BoxFit.cover,
                 ),
               ),

@@ -39,6 +39,20 @@ class _HomePageState extends State<HomePage> with HomeComponents {
       appBar: AppBar(
         title: Text('Famílias'),
         foregroundColor: Colors.indigo,
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) => <PopupMenuItem>[
+              PopupMenuItem(
+                child: Text('Compartilhar'),
+                value: 0,
+              ),
+              PopupMenuItem(
+                child: Text('Referências'),
+                value: 1,
+              ),
+            ],
+          )
+        ],
       ),
       body: _pages[_currentIndex],
       drawer: Drawer(
@@ -84,8 +98,7 @@ class _HomePageState extends State<HomePage> with HomeComponents {
                 valueListenable: _controller.families,
                 builder: (context, value, child) => Column(
                   children: [
-                    ...getFamilieListForDrawer(
-                        families: _controller.families.value),
+                    ...getFamilieListForDrawer(families: _controller.families.value),
                   ],
                 ),
               ),

@@ -6,7 +6,7 @@ class PurchaseItem {
   late int quantity;
   late double purchasePrice;
   late Product product;
-  Person? purchasedBy;
+  String? purchasedBy;
 
   PurchaseItem({
     this.id,
@@ -26,7 +26,7 @@ class PurchaseItem {
     this.product = product;
   }
 
-  void changePersonPurchased(Person person) {
+  void changePersonPurchased(String person) {
     this.purchasedBy = person;
   }
 
@@ -37,7 +37,7 @@ class PurchaseItem {
                 quantity: $quantity, 
                 purchasePrice: $purchasePrice, 
                 product: $product, 
-                purchasedBy: ${purchasedBy != null ? purchasedBy!.name : "Empty"}
+                purchasedBy: ${purchasedBy}
               )''';
   }
 }
