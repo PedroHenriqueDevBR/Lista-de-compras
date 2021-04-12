@@ -26,6 +26,7 @@ class AppWidget extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         appBarTheme: _appBarTheme(),
+        brightness: Brightness.light,
       ),
       home: SplashPage(),
     );

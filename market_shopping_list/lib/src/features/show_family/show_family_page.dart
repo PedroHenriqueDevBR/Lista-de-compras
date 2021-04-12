@@ -52,7 +52,12 @@ class _ShowFamilyPageState extends State<ShowFamilyPage> {
                       direction: Axis.horizontal,
                       children: [
                         SizedBox(width: 10.0),
-                        IconButton(icon: Icon(Icons.add_shopping_cart_outlined), onPressed: () {}),
+                        IconButton(
+                          icon: Icon(Icons.add_shopping_cart_outlined),
+                          onPressed: () {
+                            _controller.goToCreatePurchaseItemPage(context);
+                          },
+                        ),
                         PopupMenuButton(
                           icon: Icon(Icons.filter_list_outlined),
                           onSelected: (value) {

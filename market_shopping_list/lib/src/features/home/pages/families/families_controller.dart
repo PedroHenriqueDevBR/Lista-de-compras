@@ -97,7 +97,6 @@ class FamiliesController {
     Navigator.push(
       context,
       MaterialPageRoute(
-        fullscreenDialog: true,
         builder: (context) => ShowFamilyPage(family: family),
       ),
     );
