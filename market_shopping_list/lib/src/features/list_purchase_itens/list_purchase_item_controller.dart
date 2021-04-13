@@ -1,8 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:asuka/asuka.dart' as asuka;
-import 'package:market_shopping_list/src/shared/interfaces/purchase_item_storage_interface.dart';
+import 'package:market_shopping_list/src/shared/interfaces/person_storage_interface.dart';
+import 'package:market_shopping_list/src/shared/interfaces/shopping_list_interface.dart';
+import 'package:market_shopping_list/src/shared/models/family.dart';
+import 'package:market_shopping_list/src/shared/models/person.dart';
 import 'package:market_shopping_list/src/shared/models/purchase_item.dart';
-import 'package:market_shopping_list/src/shared/repositories/purchase_item_repository.dart';
+import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
+import 'package:market_shopping_list/src/shared/repositories/person_repository.dart';
+import 'package:market_shopping_list/src/shared/repositories/shopping_list_repository.dart';
 
 class ListPurchaseItemController {
   ValueNotifier<bool> isDone = ValueNotifier<bool>(false);
@@ -11,20 +16,67 @@ class ListPurchaseItemController {
   ValueNotifier<bool> isSavedPurchaseItem = ValueNotifier<bool>(false);
   ValueNotifier<int> amount = ValueNotifier<int>(0);
   ValueNotifier<double> purchaseTotal = ValueNotifier<double>(0);
-  late IPurchaseItemStorage _purchaseItemStorage;
+  late ValueNotifier<ShoppingList> shoppingList;
+  late IShoppingListStorage _shoppingListStorage;
+  late IPersonStorage _personStorage;
+  late Family family;
 
-  List<PurchaseItem> purchaseItens = [
-    PurchaseItem(quantity: 4, purchasePrice: 0.0, productName: 'Arroz'),
-    PurchaseItem(quantity: 12, purchasePrice: 4.0, productName: 'Maça', purchasedBy: 'Pedro Henrique'),
-    PurchaseItem(quantity: 2, purchasePrice: 3.35, productName: 'Feijão', purchasedBy: 'Pedro Henrique'),
-    PurchaseItem(quantity: 2, purchasePrice: 3.5, productName: 'Macarrão', purchasedBy: 'Pedro Henrique'),
-    PurchaseItem(quantity: 8, purchasePrice: 0.0, productName: 'Café'),
-    PurchaseItem(quantity: 3, purchasePrice: 3.75, productName: 'Leite', purchasedBy: 'Pedro Henrique'),
-  ];
+  ValueNotifier<List<PurchaseItem>> purchaseItens = ValueNotifier<List<PurchaseItem>>([]);
 
-  ListPurchaseItemController() {
-    this._purchaseItemStorage = PurchaseItemRepository();
-    calculatePurchaseTotal();
+  ListPurchaseItemController({
+    ShoppingList? shoppingListArgument,
+    required this.family,
+  }) {
+    this._shoppingListStorage = ShoppingListRepository();
+    this._personStorage = PersonRepository();
+
+    if (shoppingListArgument == null) {
+      shoppingList = ValueNotifier<ShoppingList>(ShoppingList.cleanData());
+    } else {
+      shoppingList = ValueNotifier<ShoppingList>(shoppingListArgument);
+      isSavedPurchaseItem.value = true;
+      isDone.value = shoppingListArgument.is_done;
+    }
+  }
+
+  void registerShoppingList() async {
+    try {
+      await formatShoppingListToSave();
+      if (shoppingListIsValidToRegister()) {
+        ShoppingList response = await _shoppingListStorage.registerShoppingList(shoppingList.value);
+        shoppingList.value = response;
+        isSavedPurchaseItem.value = true;
+        asuka.AsukaSnackbar.message('Lista de compras registrada com sucesso!');
+      }
+    } catch (error) {
+      print(error);
+      asuka.AsukaSnackbar.alert('Ocorreu um erro interno');
+    }
+  }
+
+  Future formatShoppingListToSave() async {
+    Person person = await _personStorage.getLoggedPerson();
+    this.shoppingList.value.created_by = person.name;
+    this.shoppingList.value.created_at = DateTime.now();
+    this.shoppingList.value.familyID = family.id;
+    this.shoppingList.value.is_done = isDone.value;
+  }
+
+  bool shoppingListIsValidToRegister() {
+    if (shoppingList.value.created_by.isEmpty) {
+      asuka.AsukaSnackbar.info('Informe o nome do usuário');
+      return false;
+    } else if (shoppingList.value.title.isEmpty) {
+      asuka.AsukaSnackbar.info('Informe o título da lista de compras');
+      return false;
+    } else if (shoppingList.value.description.isEmpty) {
+      asuka.AsukaSnackbar.info('Digite uma descrição para a lista de compras');
+      return false;
+    } else if (shoppingList.value.familyID.isEmpty) {
+      asuka.AsukaSnackbar.info('O código da família é importante.');
+      return false;
+    }
+    return true;
   }
 
   String formatDate({DateTime? datetime}) {
@@ -36,7 +88,7 @@ class ListPurchaseItemController {
 
   void calculatePurchaseTotal() {
     double result = 0.0;
-    for (PurchaseItem purchaseItem in purchaseItens) {
+    for (PurchaseItem purchaseItem in purchaseItens.value) {
       result += purchaseItem.purchaseTotal;
     }
     purchaseTotal.value = result;
@@ -44,11 +96,6 @@ class ListPurchaseItemController {
 
   void changeAmount(int value) {
     amount.value += value;
-  }
-
-  void savePurchaseList() {
-    isSavedPurchaseItem.value = true;
-    asuka.AsukaSnackbar.message('Lista de compras registrada com sucesso!');
   }
 
   void setIsDone(bool? value) {

@@ -36,7 +36,7 @@ class SplashController {
   }
 
   void isLoggedPerson() async {
-    Timer(Duration(milliseconds: 1500), () async {
+    Timer(Duration(milliseconds: 1100), () async {
       bool isLogged = await _personStorage.isLoggedPerson();
       isDone.value = true;
       Timer(Duration(milliseconds: 750), () {

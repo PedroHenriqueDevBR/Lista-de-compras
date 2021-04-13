@@ -6,7 +6,7 @@ class ShoppingList {
   late String created_by;
   late String title;
   late String description;
-  late bool is_done;
+  late bool is_done; // TODO: Change variable name to isDone
   late DateTime created_at;
   late String familyID;
   List<PurchaseItem> productItens = [];
@@ -74,10 +74,12 @@ class ShoppingList {
     return out;
   }
 
-  static List<PurchaseItem> getPurchaseItemListFromMap(List<Map<String, dynamic>> productItens) {
+  static List<PurchaseItem> getPurchaseItemListFromMap(List<dynamic> productItens) {
     List<PurchaseItem> out = [];
-    for (Map<String, dynamic> itemMap in productItens) {
-      out.add(PurchaseItem.fromMap(itemMap));
+    if (productItens.length > 0) {
+      for (Map<String, dynamic> itemMap in productItens) {
+        out.add(PurchaseItem.fromMap(itemMap));
+      }
     }
     return out;
   }

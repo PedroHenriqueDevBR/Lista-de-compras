@@ -1,8 +1,9 @@
+import 'package:asuka/asuka.dart' as asuka;
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/features/show_family/show_family_contoller.dart';
 import 'package:market_shopping_list/src/shared/components/family_card_component.dart';
 import 'package:market_shopping_list/src/shared/models/family.dart';
-import 'package:asuka/asuka.dart' as asuka;
+import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
 
 class ShowFamilyPage extends StatefulWidget {
   Family family;
@@ -84,31 +85,52 @@ class _ShowFamilyPageState extends State<ShowFamilyPage> {
                 ),
               ),
               SizedBox(height: 16.0),
-              ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Card(
-                    borderOnForeground: true,
-                    elevation: 0,
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: index % 3 == 0 ? Colors.green : Colors.red.shade600,
-                        child: index % 3 == 0
-                            ? Icon(
-                                Icons.done,
-                                color: Colors.white,
-                              )
-                            : Icon(
-                                Icons.close,
-                                color: Colors.white,
+              ValueListenableBuilder(
+                valueListenable: _controller.isLoadingShopingList,
+                builder: (_, bool value, ___) {
+                  if (value) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    if (_controller.shoppingListItens.value.length == 0) {
+                      return Container(
+                        child: Text('Nenhuma lista de compras cadastrada'),
+                      );
+                    } else {
+                      return ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: _controller.shoppingListItens.value.length,
+                        itemBuilder: (context, index) {
+                          ShoppingList shoppingList = _controller.shoppingListItens.value[index];
+                          return Card(
+                            borderOnForeground: true,
+                            elevation: 0,
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: shoppingList.is_done ? Colors.green : Colors.red.shade600,
+                                child: shoppingList.is_done
+                                    ? Icon(
+                                        Icons.done,
+                                        color: Colors.white,
+                                      )
+                                    : Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                      ),
                               ),
-                      ),
-                      title: Text('Titulo da lista de compras'),
-                      subtitle: Text('Descrição da lista de compras'),
-                    ),
-                  );
+                              title: Text(shoppingList.title),
+                              subtitle: Text(shoppingList.description),
+                              onTap: () {
+                                _controller.goToCreatePurchaseItemPage(context, shoppingList: shoppingList);
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  }
                 },
               ),
             ],

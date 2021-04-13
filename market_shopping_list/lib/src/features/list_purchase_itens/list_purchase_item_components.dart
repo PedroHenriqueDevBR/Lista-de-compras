@@ -24,8 +24,28 @@ class ListPurchaseItemComponents {
     );
   }
 
-  Widget inputTitle() {
+  Widget inputTitle({
+    String initialValue = null ?? '',
+    required Function onChange,
+    required Function onSaved,
+  }) {
     return TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Campo obrigatório';
+        } else if (value.length < 3) {
+          return 'Digite pelo menos 3 letras';
+        } else if (value.length > 20) {
+          return 'O limite é de 20 catacteres';
+        }
+      },
+      onChanged: (value) {
+        onChange(value);
+      },
+      onSaved: (newValue) {
+        onSaved(newValue);
+      },
+      initialValue: initialValue,
       decoration: InputDecoration(
         labelText: 'Título',
         hintText: 'Compras do mês',
@@ -34,8 +54,26 @@ class ListPurchaseItemComponents {
     );
   }
 
-  Widget inputDescription() {
+  Widget inputDescription({
+    String initialValue = null ?? '',
+    required Function onChange,
+    required Function onSaved,
+  }) {
     return TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Campo obrigatório';
+        } else if (value.length > 20) {
+          return 'O limite é de 500 catacteres';
+        }
+      },
+      onChanged: (value) {
+        onChange(value);
+      },
+      onSaved: (newValue) {
+        onSaved(newValue);
+      },
+      initialValue: initialValue,
       decoration: InputDecoration(
         labelText: 'Descrição',
         hintText: 'Breve descrição da lista de compras',

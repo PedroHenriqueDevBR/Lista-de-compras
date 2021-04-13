@@ -2,20 +2,29 @@ import 'package:asuka/asuka.dart' as asuka;
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/features/list_purchase_itens/list_purchase_item_components.dart';
 import 'package:market_shopping_list/src/features/list_purchase_itens/list_purchase_item_controller.dart';
+import 'package:market_shopping_list/src/shared/models/family.dart';
 import 'package:market_shopping_list/src/shared/models/purchase_item.dart';
+import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
 
 class ListPurchaseItemPage extends StatefulWidget {
+  Family family;
+  ShoppingList? shoppingList;
+  ListPurchaseItemPage({required this.family, this.shoppingList});
   @override
   _ListPurchaseItemPageState createState() => _ListPurchaseItemPageState();
 }
 
 class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> with ListPurchaseItemComponents {
   late ListPurchaseItemController _controller;
+  GlobalKey<FormState> _formState = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _controller = ListPurchaseItemController();
+    _controller = ListPurchaseItemController(
+      family: widget.family,
+      shoppingListArgument: widget.shoppingList,
+    );
   }
 
   @override
@@ -32,15 +41,27 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> with ListPu
             Text('Preenha os dados abaixo para criar a lista de compras'),
             Divider(),
             Form(
+              key: _formState,
               child: Column(
                 children: [
-                  inputTitle(),
+                  inputTitle(
+                    initialValue: _controller.shoppingList.value.title,
+                    onChange: (value) => _controller.shoppingList.value.title = value,
+                    onSaved: (newValue) => _controller.shoppingList.value.title = newValue,
+                  ),
                   SizedBox(height: 8.0),
-                  inputDescription(),
+                  inputDescription(
+                    initialValue: _controller.shoppingList.value.description,
+                    onChange: (value) => _controller.shoppingList.value.description = value,
+                    onSaved: (newValue) => _controller.shoppingList.value.description = newValue,
+                  ),
                   SizedBox(height: 8.0),
                   ValueListenableBuilder(
                     valueListenable: _controller.isDone,
-                    builder: (_, value, ___) => checkboxShoppingListIsDone(_controller.isDone.value, _controller.setIsDone),
+                    builder: (_, bool value, ___) {
+                      _controller.shoppingList.value.is_done = value;
+                      return checkboxShoppingListIsDone(value, _controller.setIsDone);
+                    },
                   ),
                   SizedBox(height: 8.0),
                   createAtText(_controller.formatDate()),
@@ -61,7 +82,12 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> with ListPu
                 } else {
                   return defaultButton(
                     title: 'Salvar',
-                    action: _controller.savePurchaseList,
+                    action: () {
+                      if (_formState.currentState!.validate()) {
+                        _formState.currentState!.save();
+                        _controller.registerShoppingList();
+                      }
+                    },
                     context: context,
                   );
                 }
@@ -82,10 +108,10 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> with ListPu
                       ),
                       SizedBox(height: 8.0),
                       ListView.builder(
-                        itemCount: _controller.purchaseItens.length,
+                        itemCount: _controller.purchaseItens.value.length,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) => purchaseItemCard(purchaseItem: _controller.purchaseItens[index], onClick: () {}),
+                        itemBuilder: (context, index) => purchaseItemCard(purchaseItem: _controller.purchaseItens.value[index], onClick: () {}),
                       ),
                     ],
                   );
