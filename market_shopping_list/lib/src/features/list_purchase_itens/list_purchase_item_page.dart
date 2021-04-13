@@ -177,7 +177,7 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> {
             child: Wrap(
               children: [
                 TextFormField(
-                  initialValue: purchaseItem != null ? purchaseItem.product.name : '',
+                  initialValue: purchaseItem != null ? purchaseItem.productName : '',
                   decoration: InputDecoration(
                     labelText: 'Nome do produto',
                     hintText: 'Ex: Arroz',
