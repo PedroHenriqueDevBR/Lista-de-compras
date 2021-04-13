@@ -17,11 +17,6 @@ abstract class IPurchaseItemStorage {
     required ShoppingList shoppingList,
   });
 
-  Future<PurchaseItem> linkProductToPurchaseItem({
-    required PurchaseItem purchaseItem,
-    required Product product,
-  });
-
   Future<PurchaseItem> updatePurchaseItem({
     required PurchaseItem purchaseItem,
   });
