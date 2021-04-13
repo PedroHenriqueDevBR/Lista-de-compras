@@ -29,6 +29,8 @@ class PurchaseItem {
     this.purchasedBy = person;
   }
 
+  double get purchaseTotal => this.quantity * this.purchasePrice;
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,

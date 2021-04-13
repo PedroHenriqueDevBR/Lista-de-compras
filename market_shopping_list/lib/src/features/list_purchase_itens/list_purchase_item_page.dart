@@ -1,6 +1,7 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:asuka/asuka.dart' as asuka;
+import 'package:flutter/material.dart';
+import 'package:market_shopping_list/src/features/list_purchase_itens/list_purchase_item_components.dart';
+import 'package:market_shopping_list/src/features/list_purchase_itens/list_purchase_item_controller.dart';
 import 'package:market_shopping_list/src/shared/models/purchase_item.dart';
 
 class ListPurchaseItemPage extends StatefulWidget {
@@ -8,27 +9,13 @@ class ListPurchaseItemPage extends StatefulWidget {
   _ListPurchaseItemPageState createState() => _ListPurchaseItemPageState();
 }
 
-class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> {
-  ValueNotifier<bool> isDone = ValueNotifier<bool>(false);
-  ValueNotifier<bool> selectIsActive = ValueNotifier<bool>(false);
-  ValueNotifier<bool> purchasedProduct = ValueNotifier<bool>(false);
-  ValueNotifier<bool> isSavedPurchaseItem = ValueNotifier<bool>(false);
-  ValueNotifier<int> amount = ValueNotifier<int>(0);
+class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> with ListPurchaseItemComponents {
+  late ListPurchaseItemController _controller;
 
-  String formatDate({DateTime? datetime}) {
-    if (datetime == null) {
-      datetime = DateTime.now();
-    }
-    return '${datetime.day}/${datetime.month}/${datetime.year} às ${datetime.hour}:${datetime.minute}';
-  }
-
-  void changeAmount(int value) {
-    amount.value += value;
-  }
-
-  void savePurchaseList() {
-    isSavedPurchaseItem.value = true;
-    asuka.AsukaSnackbar.message('Lista de compras registrada com sucesso!');
+  @override
+  void initState() {
+    super.initState();
+    _controller = ListPurchaseItemController();
   }
 
   @override
@@ -47,81 +34,58 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> {
             Form(
               child: Column(
                 children: [
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Título',
-                      hintText: 'Compras do mês',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
+                  inputTitle(),
                   SizedBox(height: 8.0),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Descrição',
-                      hintText: 'Breve descrição da lista de compras',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
+                  inputDescription(),
                   SizedBox(height: 8.0),
                   ValueListenableBuilder(
-                    valueListenable: isDone,
-                    builder: (_, value, ___) {
-                      return CheckboxListTile(
-                        value: isDone.value,
-                        title: Text('Finalizar lista de compras'),
-                        onChanged: (data) {
-                          isDone.value = data!;
-                        },
-                      );
-                    },
+                    valueListenable: _controller.isDone,
+                    builder: (_, value, ___) => checkboxShoppingListIsDone(_controller.isDone.value, _controller.setIsDone),
                   ),
                   SizedBox(height: 8.0),
-                  Text(
-                    'Data da criação: ${formatDate()}',
-                    textAlign: TextAlign.left,
-                  ),
+                  createAtText(_controller.formatDate()),
                 ],
               ),
             ),
             Divider(),
             ValueListenableBuilder(
-              valueListenable: isSavedPurchaseItem,
+              valueListenable: _controller.isSavedPurchaseItem,
               builder: (_, bool value, ___) {
                 if (value) {
                   return defaultButton(
                     title: 'Adicionar item',
                     action: showItemForm,
                     icon: Icon(Icons.add, color: Colors.white),
+                    context: context,
                   );
                 } else {
                   return defaultButton(
                     title: 'Salvar',
-                    action: savePurchaseList,
+                    action: _controller.savePurchaseList,
+                    context: context,
                   );
                 }
               },
             ),
             Divider(),
             ValueListenableBuilder(
-              valueListenable: isSavedPurchaseItem,
+              valueListenable: _controller.isSavedPurchaseItem,
               builder: (_, bool value, ___) {
                 if (value) {
                   return Wrap(
                     children: [
-                      Text('Itens'),
+                      ValueListenableBuilder(
+                        valueListenable: _controller.purchaseTotal,
+                        builder: (_, value, ___) => ListTile(
+                          title: Text('Total: R\$ $value'),
+                        ),
+                      ),
                       SizedBox(height: 8.0),
                       ListView.builder(
-                        itemCount: 8,
+                        itemCount: _controller.purchaseItens.length,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) => Card(
-                          elevation: 0.0,
-                          child: ListTile(
-                            title: Text('3 X Arroz 5Kg'),
-                            subtitle: Text('Comprado por: Pedro Henrique'),
-                            trailing: Icon(Icons.done),
-                          ),
-                        ),
+                        itemBuilder: (context, index) => purchaseItemCard(purchaseItem: _controller.purchaseItens[index], onClick: () {}),
                       ),
                     ],
                   );
@@ -136,37 +100,16 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> {
     );
   }
 
-  Widget defaultButton({
-    required String title,
-    required Function action,
-    Icon? icon,
-  }) {
-    return Card(
-      child: ListTile(
-        tileColor: Theme.of(context).primaryColor,
-        title: Text(
-          title,
-          style: TextStyle(color: Colors.white),
-          textAlign: icon != null ? TextAlign.left : TextAlign.center,
-        ),
-        trailing: icon,
-        onTap: () {
-          action();
-        },
-      ),
-    );
-  }
-
   void showItemForm({PurchaseItem? purchaseItem}) {
     if (purchaseItem != null) {
-      amount.value = purchaseItem.quantity;
+      _controller.amount.value = purchaseItem.quantity;
       if (purchaseItem.purchasedBy != null) {
-        purchasedProduct.value = true;
+        _controller.purchasedProduct.value = true;
       } else {
-        purchasedProduct.value = true;
+        _controller.purchasedProduct.value = true;
       }
     } else {
-      amount.value = 0;
+      _controller.amount.value = 0;
     }
     asuka.showDialog(
       barrierDismissible: false,
@@ -176,14 +119,7 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> {
           content: Form(
             child: Wrap(
               children: [
-                TextFormField(
-                  initialValue: purchaseItem != null ? purchaseItem.productName : '',
-                  decoration: InputDecoration(
-                    labelText: 'Nome do produto',
-                    hintText: 'Ex: Arroz',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
+                inputProductName(initialValue: purchaseItem != null ? purchaseItem.productName : ''),
                 Divider(),
                 Row(
                   mainAxisSize: MainAxisSize.max,
@@ -192,55 +128,41 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> {
                     IconButton(
                       icon: Icon(Icons.remove),
                       onPressed: () {
-                        changeAmount(-1);
+                        _controller.changeAmount(-1);
                       },
                     ),
                     ValueListenableBuilder(
-                      valueListenable: amount,
+                      valueListenable: _controller.amount,
                       builder: (_, value, __) => Text(value.toString()),
                     ),
                     IconButton(
                       icon: Icon(Icons.add),
                       onPressed: () {
-                        changeAmount(1);
+                        _controller.changeAmount(1);
                       },
                     ),
                   ],
                 ),
                 Divider(),
                 ValueListenableBuilder(
-                  valueListenable: purchasedProduct,
+                  valueListenable: _controller.purchasedProduct,
                   builder: (_, value, ___) {
-                    return CheckboxListTile(
-                      value: purchasedProduct.value,
-                      title: Text('Produto comprado'),
-                      onChanged: (data) {
-                        purchasedProduct.value = data!;
-                        purchasedProduct.notifyListeners();
+                    return checkboxPurchasedProduct(
+                      value: _controller.purchasedProduct.value,
+                      onChange: (data) {
+                        _controller.purchasedProduct.value = data!;
+                        _controller.purchasedProduct.notifyListeners();
                       },
                     );
                   },
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    TextButton(
-                      child: Text(
-                        'Cancelar',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                      onPressed: () {
-                        Navigator.pop(dialogContext);
-                      },
-                    ),
-                    TextButton(
-                      child: Text('Adicionar'),
-                      onPressed: () {
-                        Navigator.pop(dialogContext);
-                      },
-                    ),
-                  ],
+                formBottomActionsContainer(
+                  cancelAction: () {
+                    Navigator.pop(dialogContext);
+                  },
+                  doneAction: () {
+                    Navigator.pop(dialogContext);
+                  },
                 ),
               ],
             ),
