@@ -54,14 +54,25 @@ class ShoppingListRepository implements IShoppingListStorage {
   }
 
   @override
-  Future<ShoppingList> addItemToShoppingList({required ShoppingList shoppingList, required PurchaseItem item}) {
-    // TODO: implement allShoppingListFromFamily
-    throw UnimplementedError();
+  Future<ShoppingList> updateShoppingList({required ShoppingList shoppingList}) async {
+    if (shoppingList.id == null){
+      throw DataNotFoundException(dataName: 'shoppingList.id is required');
+    } else {
+      try {
+        CollectionReference shoppingListCollection = await _firestore.collection(_databaseReference.shoppingList);
+        DocumentReference shoppingListDocument = await shoppingListCollection.doc(shoppingList.id);
+        shoppingListDocument.update(shoppingList.toMap());
+        return shoppingList;
+      } catch(error) {
+        print(error);
+        throw Exception();
+      }
+    }
   }
 
   @override
-  Future<ShoppingList> updateShoppingList({required ShoppingList shoppingList}) {
-    // TODO: implement updateShoppingList
+  Future<ShoppingList> addItemToShoppingList({required ShoppingList shoppingList, required PurchaseItem item}) {
+    // TODO: implement allShoppingListFromFamily
     throw UnimplementedError();
   }
 

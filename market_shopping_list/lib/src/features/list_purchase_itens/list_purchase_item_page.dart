@@ -9,12 +9,15 @@ import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
 class ListPurchaseItemPage extends StatefulWidget {
   Family family;
   ShoppingList? shoppingList;
+
   ListPurchaseItemPage({required this.family, this.shoppingList});
+
   @override
   _ListPurchaseItemPageState createState() => _ListPurchaseItemPageState();
 }
 
-class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> with ListPurchaseItemComponents {
+class _ListPurchaseItemPageState extends State<ListPurchaseItemPage>
+    with ListPurchaseItemComponents {
   late ListPurchaseItemController _controller;
   GlobalKey<FormState> _formState = GlobalKey<FormState>();
 
@@ -45,22 +48,27 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> with ListPu
               child: Column(
                 children: [
                   inputTitle(
-                    initialValue: _controller.shoppingList.value.title,
-                    onChange: (value) => _controller.shoppingList.value.title = value,
-                    onSaved: (newValue) => _controller.shoppingList.value.title = newValue,
+                    initialValue: _controller.currentShoppingList.value.title,
+                    onChange: (value) =>
+                        _controller.currentShoppingList.value.title = value,
+                    onSaved: (newValue) =>
+                        _controller.currentShoppingList.value.title = newValue,
                   ),
                   SizedBox(height: 8.0),
                   inputDescription(
-                    initialValue: _controller.shoppingList.value.description,
-                    onChange: (value) => _controller.shoppingList.value.description = value,
-                    onSaved: (newValue) => _controller.shoppingList.value.description = newValue,
+                    initialValue: _controller.currentShoppingList.value.description,
+                    onChange: (value) =>
+                        _controller.currentShoppingList.value.description = value,
+                    onSaved: (newValue) =>
+                        _controller.currentShoppingList.value.description = newValue,
                   ),
                   SizedBox(height: 8.0),
                   ValueListenableBuilder(
-                    valueListenable: _controller.isDone,
+                    valueListenable: _controller.checkboxShoppingListIsDone,
                     builder: (_, bool value, ___) {
-                      _controller.shoppingList.value.is_done = value;
-                      return checkboxShoppingListIsDone(value, _controller.setIsDone);
+                      _controller.currentShoppingList.value.is_done = value;
+                      return checkboxShoppingListIsDone(
+                          value, _controller.setIsDone);
                     },
                   ),
                   SizedBox(height: 8.0),
@@ -72,25 +80,32 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> with ListPu
             ValueListenableBuilder(
               valueListenable: _controller.isSavedPurchaseItem,
               builder: (_, bool value, ___) {
-                if (value) {
-                  return defaultButton(
-                    title: 'Adicionar item',
-                    action: showItemForm,
-                    icon: Icon(Icons.add, color: Colors.white),
-                    context: context,
-                  );
-                } else {
-                  return defaultButton(
-                    title: 'Salvar',
-                    action: () {
-                      if (_formState.currentState!.validate()) {
-                        _formState.currentState!.save();
-                        _controller.registerShoppingList();
-                      }
-                    },
-                    context: context,
-                  );
-                }
+                return Row(
+                  children: [
+                    Expanded(
+                      child: defaultButton(
+                        title: 'Salvar',
+                        action: () {
+                          if (_formState.currentState!.validate()) {
+                            _formState.currentState!.save();
+                            _controller.saveData();
+                          }
+                        },
+                        context: context,
+                      ),
+                    ),
+                    value
+                        ? Expanded(
+                            child: defaultButton(
+                              title: 'Adicionar item',
+                              action: showItemForm,
+                              icon: Icon(Icons.add, color: Colors.white),
+                              context: context,
+                            ),
+                          )
+                        : Container(),
+                  ],
+                );
               },
             ),
             Divider(),
@@ -111,7 +126,10 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> with ListPu
                         itemCount: _controller.purchaseItens.value.length,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) => purchaseItemCard(purchaseItem: _controller.purchaseItens.value[index], onClick: () {}),
+                        itemBuilder: (context, index) => purchaseItemCard(
+                            purchaseItem:
+                                _controller.purchaseItens.value[index],
+                            onClick: () {}),
                       ),
                     ],
                   );
@@ -128,14 +146,14 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> with ListPu
 
   void showItemForm({PurchaseItem? purchaseItem}) {
     if (purchaseItem != null) {
-      _controller.amount.value = purchaseItem.quantity;
+      _controller.purchaseItemAmount.value = purchaseItem.quantity;
       if (purchaseItem.purchasedBy != null) {
-        _controller.purchasedProduct.value = true;
+        _controller.checkboxPurchasedProduct.value = true;
       } else {
-        _controller.purchasedProduct.value = true;
+        _controller.checkboxPurchasedProduct.value = true;
       }
     } else {
-      _controller.amount.value = 0;
+      _controller.purchaseItemAmount.value = 0;
     }
     asuka.showDialog(
       barrierDismissible: false,
@@ -145,7 +163,9 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> with ListPu
           content: Form(
             child: Wrap(
               children: [
-                inputProductName(initialValue: purchaseItem != null ? purchaseItem.productName : ''),
+                inputProductName(
+                    initialValue:
+                        purchaseItem != null ? purchaseItem.productName : ''),
                 Divider(),
                 Row(
                   mainAxisSize: MainAxisSize.max,
@@ -158,7 +178,7 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> with ListPu
                       },
                     ),
                     ValueListenableBuilder(
-                      valueListenable: _controller.amount,
+                      valueListenable: _controller.purchaseItemAmount,
                       builder: (_, value, __) => Text(value.toString()),
                     ),
                     IconButton(
@@ -171,13 +191,13 @@ class _ListPurchaseItemPageState extends State<ListPurchaseItemPage> with ListPu
                 ),
                 Divider(),
                 ValueListenableBuilder(
-                  valueListenable: _controller.purchasedProduct,
+                  valueListenable: _controller.checkboxPurchasedProduct,
                   builder: (_, value, ___) {
                     return checkboxPurchasedProduct(
-                      value: _controller.purchasedProduct.value,
+                      value: _controller.checkboxPurchasedProduct.value,
                       onChange: (data) {
-                        _controller.purchasedProduct.value = data!;
-                        _controller.purchasedProduct.notifyListeners();
+                        _controller.checkboxPurchasedProduct.value = data!;
+                        _controller.checkboxPurchasedProduct.notifyListeners();
                       },
                     );
                   },

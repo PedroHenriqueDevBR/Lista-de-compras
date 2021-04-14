@@ -8,18 +8,21 @@ class ListPurchaseItemComponents {
     Icon? icon,
     required BuildContext context,
   }) {
-    return Card(
-      child: ListTile(
-        tileColor: Theme.of(context).primaryColor,
-        title: Text(
-          title,
-          style: TextStyle(color: Colors.white),
-          textAlign: icon != null ? TextAlign.left : TextAlign.center,
+    return AnimatedContainer(
+      duration: Duration(seconds: 1),
+      child: Card(
+        child: ListTile(
+          tileColor: Theme.of(context).primaryColor,
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white),
+            textAlign: icon != null ? TextAlign.left : TextAlign.center,
+          ),
+          trailing: icon,
+          onTap: () {
+            action();
+          },
         ),
-        trailing: icon,
-        onTap: () {
-          action();
-        },
       ),
     );
   }
