@@ -1,27 +1,25 @@
 import 'package:asuka/asuka.dart';
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/features/list_purchase_itens/list_purchase_item_page.dart';
-import 'package:market_shopping_list/src/shared/interfaces/family_storage_interface.dart';
 import 'package:market_shopping_list/src/shared/interfaces/shopping_list_interface.dart';
 import 'package:market_shopping_list/src/shared/models/family.dart';
 import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
-import 'package:market_shopping_list/src/shared/repositories/family_repository.dart';
 import 'package:market_shopping_list/src/shared/repositories/shopping_list_repository.dart';
 
 class ShowFamilyController {
-  late IFamilyStorage _familyStorage;
   late IShoppingListStorage _shoppingListStorage;
 
   ValueNotifier<bool> isLoadingShopingList = ValueNotifier<bool>(false);
   ValueNotifier<Family> family = ValueNotifier<Family>(Family.cleanData());
   ValueNotifier<List<ShoppingList>> shoppingListItens = ValueNotifier<List<ShoppingList>>([]);
+  ValueNotifier<List<ShoppingList>> shoppingListItensToShow = ValueNotifier<List<ShoppingList>>([]);
+  ValueNotifier<int> currentFilterSelected = ValueNotifier<int>(0);
 
   ShowFamilyController({
     required Family family,
   }) {
     this.family.value = family;
     this._shoppingListStorage = ShoppingListRepository();
-    this._familyStorage = FamilyRepository();
     getAllShoppingListFromDatabase();
   }
 
@@ -44,12 +42,34 @@ class ShowFamilyController {
     try {
       List<ShoppingList> result = await _shoppingListStorage.allShoppingListFromFamily(family: this.family.value);
       this.shoppingListItens.value = result;
+      this.shoppingListItensToShow.value = result;
       this.shoppingListItens.notifyListeners();
+      this.shoppingListItensToShow.notifyListeners();
     } catch (error) {
       print(error);
       AsukaSnackbar.alert('Ocorreu um erro interno');
     } finally {
       isLoadingShopingList.value = false;
     }
+  }
+
+  void searchShopingList(String search){
+    print(search);
+    List<ShoppingList> result = [];
+    for (ShoppingList shoppingList in shoppingListItens.value) {
+      if (shoppingList.title.contains(search)){
+        result.add(shoppingList);
+      }
+    }
+    print(result.length);
+    shoppingListItensToShow.value = result;
+    shoppingListItensToShow.notifyListeners();
+  }
+
+  void changeCategoryFilter(int value) {
+    if (value < 0 || value > 2) {
+      value = 0;
+    }
+    this.currentFilterSelected.value = value;
   }
 }
