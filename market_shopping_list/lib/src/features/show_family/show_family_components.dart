@@ -39,7 +39,7 @@ class ShowFamilyCompoenents {
     );
   }
 
-  Widget cardShoppingListItem({required ShoppingList shoppingList, required Function onTap,}) {
+  Widget cardShoppingListItem({required ShoppingList shoppingList, required Function onTap, required Function onDelete}) {
     return Card(
       borderOnForeground: true,
       elevation: 0,
@@ -60,6 +60,7 @@ class ShowFamilyCompoenents {
         ),
         title: Text(shoppingList.title),
         subtitle: Text(shoppingList.description),
+        trailing: IconButton(icon: Icon(Icons.delete_outline, color: Colors.red,), onPressed: (){onDelete();}),
         onTap: (){onTap();},
       ),
     );

@@ -1,4 +1,4 @@
-import 'package:asuka/asuka.dart';
+import 'package:asuka/asuka.dart' as asuka;
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/features/list_purchase_itens/list_purchase_item_page.dart';
 import 'package:market_shopping_list/src/shared/interfaces/shopping_list_interface.dart';
@@ -47,9 +47,20 @@ class ShowFamilyController {
       this.shoppingListItensToShow.notifyListeners();
     } catch (error) {
       print(error);
-      AsukaSnackbar.alert('Ocorreu um erro interno');
+      asuka.showSnackBar(SnackBar(content: Text('Ocorreu um erro interno')));
     } finally {
       isLoadingShopingList.value = false;
+    }
+  }
+
+  void deleteShoppingList(ShoppingList shoppingList) async {
+    try {
+      await this._shoppingListStorage.deleteShoppingList(shoppingList: shoppingList);
+      getAllShoppingListFromDatabase();
+      asuka.showSnackBar(SnackBar(content: Text('Lista de compras deletada')));
+    } catch(error) {
+      print(error);
+      asuka.showSnackBar(SnackBar(content: Text('Ocorreu um erro ao deletar lista de compras')));
     }
   }
 

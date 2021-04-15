@@ -38,18 +38,23 @@ class ShoppingListRepository implements IShoppingListStorage {
     if (family.id == null) {
       throw DataNotFoundException(dataName: 'Family.id is required');
     } else {
-      CollectionReference shoppingListCollection = await _firestore.collection(_databaseReference.shoppingList);
-      QuerySnapshot shoppingListQuery = await shoppingListCollection.where('familyID', isEqualTo: family.id).get();
+      try {
+        CollectionReference shoppingListCollection = await _firestore.collection(_databaseReference.shoppingList);
+        QuerySnapshot shoppingListQuery = await shoppingListCollection.where('familyID', isEqualTo: family.id).get();
 
-      List<ShoppingList> out = [];
-      for (QueryDocumentSnapshot documentSnapshot in shoppingListQuery.docs) {
-        if (documentSnapshot.data()!.isNotEmpty) {
-          ShoppingList shoppingList = ShoppingList.fromMap(documentSnapshot.data()!);
-          shoppingList.id = documentSnapshot.id;
-          out.add(shoppingList);
+        List<ShoppingList> out = [];
+        for (QueryDocumentSnapshot documentSnapshot in shoppingListQuery.docs) {
+          if (documentSnapshot.data()!.isNotEmpty) {
+            ShoppingList shoppingList = ShoppingList.fromMap(documentSnapshot.data()!);
+            shoppingList.id = documentSnapshot.id;
+            out.add(shoppingList);
+          }
         }
+        return out;
+      } catch(error) {
+        print(error);
+        throw Exception();
       }
-      return out;
     }
   }
 
@@ -71,9 +76,47 @@ class ShoppingListRepository implements IShoppingListStorage {
   }
 
   @override
-  Future<ShoppingList> addItemToShoppingList({required ShoppingList shoppingList, required PurchaseItem item}) {
-    // TODO: implement allShoppingListFromFamily
-    throw UnimplementedError();
+  Future<ShoppingList> addItemToShoppingList({required ShoppingList shoppingList, required PurchaseItem item}) async {
+    // TODO: Testar essa função
+    if (shoppingList.id == null) {
+      throw DataNotFoundException(dataName: 'shoppingList.id is required');
+    } else {
+      try {
+        shoppingList.addProductItem(item);
+        ShoppingList response = await updateShoppingList(shoppingList: shoppingList);
+        return response;
+      } catch(error) {
+        print(error);
+        throw Exception();
+      }
+    }
+  }
+
+  @override
+  Future<ShoppingList> removeItemToShoppingList({required ShoppingList shoppingList, required PurchaseItem item}) async {
+    // TODO: Testar essa função
+    if (shoppingList.id == null) {
+      throw DataNotFoundException(dataName: 'shoppingList.id is required');
+    } else {
+      bool locatedObject = shoppingList.productItens.remove(item);
+      if (locatedObject) {
+        ShoppingList response = await updateShoppingList(shoppingList: shoppingList);
+        return response;
+      } else {
+        throw DataNotFoundException(dataName: 'item not found in shoppingList.productItens');
+      }
+    }
+  }
+
+  @override
+  Future<void> deleteShoppingList({required ShoppingList shoppingList}) async {
+    // TODO: Testar essa função
+    if (shoppingList.id == null) {
+      throw DataNotFoundException(dataName: 'shoppingList.id is required');
+    } else {
+      CollectionReference shoppingListCollection = await _firestore.collection(_databaseReference.shoppingList);
+      await shoppingListCollection.doc(shoppingList.id).delete();
+    }
   }
 
   @override
@@ -95,20 +138,8 @@ class ShoppingListRepository implements IShoppingListStorage {
   }
 
   @override
-  Future<void> deleteShoppingList({required ShoppingList shoppingList}) {
-    // TODO: implement deleteShoppingList
-    throw UnimplementedError();
-  }
-
-  @override
   Future<List<ShoppingList>> getAllEmptyShoppingListFromFamily({required Family family}) {
     // TODO: implement getAllEmptyShoppingListFromFamily
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<ShoppingList> removeItemToShoppingList({required ShoppingList shoppingList, required PurchaseItem item}) {
-    // TODO: implement removeItemToShoppingList
     throw UnimplementedError();
   }
 }

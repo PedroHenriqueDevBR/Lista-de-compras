@@ -98,6 +98,9 @@ class _ShowFamilyPageState extends State<ShowFamilyPage>
                                           context,
                                           shoppingList: shoppingList);
                                     },
+                                    onDelete: (){
+                                      _controller.deleteShoppingList(shoppingList);
+                                    }
                                   );
                                 },
                               ) : Container(child: Text('Nada para apresentar'),);
