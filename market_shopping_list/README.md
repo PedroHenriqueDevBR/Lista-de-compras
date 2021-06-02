@@ -59,8 +59,9 @@ insert into shopping_list(title, description, create_at, family)
 values ('Compras 01-06-2021', 'Compras 01-06-2021', '01-06-2021', 1);
 ```
 
-**Selecionar todas as listas de compras de uma família**
+**============================================================================**
 
+**Selecionar todas as listas de compras de uma família**
 ```sql
 select * from shopping_list where family = 1;
 ```
@@ -117,6 +118,15 @@ insert into purchase_item(product_name, quantity, price, shopping_list)
 values ('Arroz', 4, 22.50, 1);
 ```
 
+**calcular o total de uma lista de compras**
+
+```sql
+select sum(pi.quantity * pi.price) from shopping_list as sl inner join purchase_item pi
+on sl.id = pi.shopping_list where sl.id = 1;
+```
+
+**============================================================================**
+
 **Selecionar todos os itens da lista de compras**
 
 ```sql
@@ -137,11 +147,4 @@ where id = 1;
 
 ```sql
 delete from purchase_item where id = 2;
-```
-
-**calcular o total de uma lista de compras**
-
-```sql
-select sum(pi.quantity * pi.price) from shopping_list as sl inner join purchase_item pi
-on sl.id = pi.shopping_list where sl.id = 1;
 ```

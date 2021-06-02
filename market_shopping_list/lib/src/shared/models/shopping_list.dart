@@ -1,17 +1,40 @@
+import 'dart:convert';
+
 import 'package:market_shopping_list/src/shared/models/purchase_item.dart';
 
 class ShoppingList {
   dynamic? id;
   String title;
   String? description;
-  bool is_done;
-  DateTime created_at = DateTime.now();
+  bool isDone;
+  late DateTime createdAt;
   List<PurchaseItem> productItens = [];
 
   ShoppingList({
     this.id,
     required this.title,
     this.description,
-    this.is_done = false,
-  });
+    this.isDone = false,
+    DateTime? createdAt,
+  }) {
+    if (createdAt == null) {
+      this.createdAt = DateTime.now();
+    } else {
+      this.createdAt = createdAt;
+    }
+  }
+
+  void setProductItens(List<PurchaseItem> productItens) => this.productItens = productItens;
+
+  void addProductItem(PurchaseItem purchaseItem) => this.productItens.add(purchaseItem);
+
+  factory ShoppingList.fromSQLite(Map map) {
+    return ShoppingList(
+      id: map['id'],
+      title: map['title'],
+      description: map['description'],
+      isDone: map['is_done'],
+      createdAt: DateTime.fromMillisecondsSinceEpoch(int.parse(map['create_at'])),
+    );
+  }
 }

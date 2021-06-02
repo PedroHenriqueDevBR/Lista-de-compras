@@ -12,21 +12,14 @@ class Family {
     required this.name,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-    };
-  }
+  void setListToBuy(List<ShoppingList> listToBuy) => this.listToBuy = listToBuy;
 
-  factory Family.fromMap(Map<String, dynamic> map) {
+  void addListToBuy(ShoppingList listToBuy) => this.listToBuy.add(listToBuy);
+
+  factory Family.fromSQLite(Map map) {
     return Family(
       id: map['id'],
       name: map['name'],
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory Family.fromJson(String source) => Family.fromMap(json.decode(source));
 }
