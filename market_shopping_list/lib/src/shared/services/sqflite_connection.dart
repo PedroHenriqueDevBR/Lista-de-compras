@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:market_shopping_list/src/shared/dal/sqlite_sql/database_sql.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -34,8 +35,6 @@ class SQFLiteConnection {
   }
 
   FutureOr<void> _onCreate(Database db, int version) {
-    db.execute('''
-    
-    ''');
+    db.execute(DatabaseSQL.DATABASE_CREATOR_SQL);
   }
 }
