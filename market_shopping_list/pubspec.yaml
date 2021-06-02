@@ -13,11 +13,12 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  firebase_core: ^1.0.2
-  firebase_auth: ^1.0.1
-  cloud_firestore: ^1.0.3
-  google_sign_in: ^5.0.1
+  # firebase_core: ^1.0.2
+  # firebase_auth: ^1.0.1
+  # cloud_firestore: ^1.0.3
+  # google_sign_in: ^5.0.1
   asuka: ^2.0.0-nullsafety.2
+  sqflite: ^2.0.0+3
 
 dev_dependencies:
   flutter_test:
@@ -37,18 +38,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - static/images/apresentacao.png
-    - static/images/bio.png
-    - static/images/calendario.png
-    - static/images/carrinho-de-compras.png
-    - static/images/cesta-de-compras.png
-    - static/images/logo.png
-    - static/images/mercado.png
-    - static/images/teste.png
-    - static/images/purple-bruch.jpg
-    - static/images/purple-sky.jpg
-    - static/images/universe.jpg
-
+    - static/images/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
