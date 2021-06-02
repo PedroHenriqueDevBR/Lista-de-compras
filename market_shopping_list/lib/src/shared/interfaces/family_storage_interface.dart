@@ -1,22 +1,12 @@
 import 'package:market_shopping_list/src/shared/models/family.dart';
-import 'package:market_shopping_list/src/shared/models/person.dart';
+import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
 
 abstract class IFamilyStorage {
-  Future<List<Family>> selectAllFamiliesFromPerson({required Person person});
+  Future<Family> createFamily(Family family);
 
-  Future<Family> registerFamily({required Family family});
+  Future<List<Family>> getAllFamilies();
 
-  Future<Family> updateFamilyInformations({required Family family});
+  Future<Family> updateFamily(Family family);
 
-  Future<void> deleteFamily({required Family family});
-
-  Future<void> addAdministratorToFamily({
-    required Family family,
-    required Person person,
-  });
-
-  Future<Family> setFamilyPassword({
-    required Family family,
-    required String password,
-  });
+  Future<List<ShoppingList>> addShoppingList(Family family, ShoppingList shoppingList);
 }
