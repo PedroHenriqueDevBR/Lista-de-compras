@@ -1,1 +1,0 @@
-class LoginCanceledException implements Exception {}

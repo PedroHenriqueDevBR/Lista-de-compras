@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ColorUtil {
+class AppColors {
   Color bgColor = Color(0XFFF0F4C3);
   Color primaryColor = Colors.indigo;
   Color primaryColorLight = Colors.blue;

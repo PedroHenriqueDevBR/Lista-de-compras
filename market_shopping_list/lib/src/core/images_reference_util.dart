@@ -1,4 +1,4 @@
-class ImageReference {
+class AppImages {
   static const String base = 'static/images';
 
   String presentation = '${base}/apresentacao.png';

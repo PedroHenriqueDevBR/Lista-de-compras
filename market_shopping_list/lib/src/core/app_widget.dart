@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:market_shopping_list/src/features/login/login_page.dart';
-import 'package:market_shopping_list/src/features/splash/splash_page.dart';
-import 'package:market_shopping_list/src/shared/utils/colors_util.dart';
 import 'package:asuka/asuka.dart' as asuka;
+import 'package:market_shopping_list/src/core/colors_util.dart';
 
 class AppWidget extends StatelessWidget {
-  ColorUtil _colorUtil = ColorUtil();
+  AppColors _colorUtil = AppColors();
 
   void changeNavigatorColor() {
     dynamic systemTheme = SystemUiOverlayStyle.dark.copyWith(
@@ -29,7 +27,7 @@ class AppWidget extends StatelessWidget {
         appBarTheme: _appBarTheme(),
         brightness: Brightness.light,
       ),
-      home: SplashPage(),
+      home: AppPage(),
     );
   }
 
@@ -39,6 +37,17 @@ class AppWidget extends StatelessWidget {
       backgroundColor: _colorUtil.primaryColor,
       iconTheme: IconThemeData(color: Colors.white),
       brightness: Brightness.dark,
+    );
+  }
+}
+
+class AppPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Text('Apenas um teste'),
+      ),
     );
   }
 }
