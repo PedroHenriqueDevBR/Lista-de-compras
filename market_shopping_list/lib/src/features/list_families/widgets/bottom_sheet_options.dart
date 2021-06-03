@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 
 class BottomSheetOptions extends StatelessWidget {
+  Function familyFunction;
+  Function shoppingListFunction;
+
+  BottomSheetOptions({
+    Key? key,
+    required this.familyFunction,
+    required this.shoppingListFunction,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -17,11 +26,17 @@ class BottomSheetOptions extends StatelessWidget {
         ListTile(
           trailing: Icon(Icons.arrow_forward_ios),
           title: Text('criar categoria'),
+          onTap: () {
+            familyFunction();
+          },
         ),
         Divider(),
         ListTile(
           trailing: Icon(Icons.arrow_forward_ios),
           title: Text('criar Lista de compras'),
+          onTap: () {
+            shoppingListFunction();
+          },
         ),
       ],
     );

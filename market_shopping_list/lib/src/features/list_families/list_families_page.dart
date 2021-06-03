@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:market_shopping_list/src/features/create_family/create_family_page.dart';
 import 'package:market_shopping_list/src/features/list_families/list_families_controller.dart';
 import 'package:market_shopping_list/src/features/list_families/widgets/bottom_sheet_options.dart';
 import 'package:market_shopping_list/src/features/list_families/widgets/family_item.dart';
@@ -36,7 +37,19 @@ class _ListFamiliesPageState extends State<ListFamiliesPage> {
         onPressed: () {
           asuka.showBottomSheet(
             (context) {
-              return BottomSheetOptions();
+              return BottomSheetOptions(
+                familyFunction: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => CreateFamilyPage(),
+                    ),
+                  );
+                },
+                shoppingListFunction: () {
+                  print('Deve ser implementada');
+                },
+              );
             },
             elevation: 4.0,
             shape: RoundedRectangleBorder(

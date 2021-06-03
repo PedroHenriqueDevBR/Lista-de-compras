@@ -12,6 +12,8 @@ class Family {
     required this.name,
   });
 
+  Family.withNoData({this.name = ''});
+
   void setListToBuy(List<ShoppingList> listToBuy) => this.listToBuy = listToBuy;
 
   void addListToBuy(ShoppingList listToBuy) => this.listToBuy.add(listToBuy);
