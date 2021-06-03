@@ -37,6 +37,7 @@ class AppWidget extends StatelessWidget {
       backgroundColor: AppColors.primaryColor,
       iconTheme: IconThemeData(color: Colors.white),
       brightness: Brightness.dark,
+      elevation: 0,
     );
   }
 }
