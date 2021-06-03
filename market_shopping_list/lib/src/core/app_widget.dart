@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:asuka/asuka.dart' as asuka;
 import 'package:market_shopping_list/src/core/colors_util.dart';
+import 'package:market_shopping_list/src/features/list_families/list_families_page.dart';
 
 class AppWidget extends StatelessWidget {
-  AppColors _colorUtil = AppColors();
-
   void changeNavigatorColor() {
     dynamic systemTheme = SystemUiOverlayStyle.dark.copyWith(
-      statusBarColor: _colorUtil.primaryColor,
-      systemNavigationBarColor: _colorUtil.primaryColor,
+      statusBarColor: AppColors.primaryColor,
+      systemNavigationBarColor: AppColors.primaryColor,
     );
     SystemChrome.setSystemUIOverlayStyle(systemTheme);
   }
@@ -23,31 +22,20 @@ class AppWidget extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.indigo,
-        primaryColor: _colorUtil.primaryColor,
+        primaryColor: AppColors.primaryColor,
         appBarTheme: _appBarTheme(),
         brightness: Brightness.light,
       ),
-      home: AppPage(),
+      home: ListFamiliesPage(),
     );
   }
 
   AppBarTheme _appBarTheme() {
     return AppBarTheme(
       actionsIconTheme: IconThemeData(color: Colors.white),
-      backgroundColor: _colorUtil.primaryColor,
+      backgroundColor: AppColors.primaryColor,
       iconTheme: IconThemeData(color: Colors.white),
       brightness: Brightness.dark,
-    );
-  }
-}
-
-class AppPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('Apenas um teste'),
-      ),
     );
   }
 }

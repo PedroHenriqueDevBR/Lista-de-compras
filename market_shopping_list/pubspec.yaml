@@ -19,6 +19,8 @@ dependencies:
   # google_sign_in: ^5.0.1
   asuka: ^2.0.0-nullsafety.2
   sqflite: ^2.0.0+3
+  flutter_speed_dial: ^3.0.5
+  rx_notifier: ^1.1.0
 
 dev_dependencies:
   flutter_test:
