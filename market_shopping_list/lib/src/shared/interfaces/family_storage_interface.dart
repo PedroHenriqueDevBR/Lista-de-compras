@@ -9,4 +9,6 @@ abstract class IFamilyStorage {
   Future<Family> updateFamily(Family family);
 
   Future<List<ShoppingList>> addShoppingList(Family family, ShoppingList shoppingList);
+
+  Future<void> deleteFamily(Family family);
 }

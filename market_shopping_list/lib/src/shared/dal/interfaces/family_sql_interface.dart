@@ -9,4 +9,6 @@ abstract class IFamilySQL {
   String updateFamily(Family family);
 
   String addShoppingList(Family family, ShoppingList shoppingList);
+
+  String deleteFamily(Family family);
 }

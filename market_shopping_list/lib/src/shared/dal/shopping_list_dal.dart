@@ -40,8 +40,9 @@ class ShoppingListDAL implements IShoppingListStorage {
   Future<List<ShoppingList>> selectAllShoppingListsByFamily(Family family) async {
     try {
       List<Map> response = await db.rawQuery(shoppingListSQL.selectAllShoppingListsByFamily(family));
-      response.map((item) => ShoppingList.fromSQLite(item));
-      return response as List<ShoppingList>;
+      List<ShoppingList> shoppingList = [];
+      for (Map item in response) shoppingList.add(ShoppingList.fromSQLite(item));
+      return shoppingList;
     } catch (error) {
       throw Exception(error);
     }

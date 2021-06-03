@@ -35,4 +35,11 @@ class FamilySQLite implements IFamilySQL {
     values ('${shoppingList.title}', '${shoppingList.description}', '${shoppingList.createdAt.millisecondsSinceEpoch}', ${family.id});
     ''';
   }
+
+  @override
+  String deleteFamily(Family family) {
+    return '''
+    delete from ${DatabaseSQL.FAMILY} where id = ${family.id};
+    ''';
+  }
 }

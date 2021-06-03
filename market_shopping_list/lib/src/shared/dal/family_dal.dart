@@ -39,9 +39,13 @@ class FamilyDAL implements IFamilyStorage {
   Future<List<Family>> getAllFamilies() async {
     try {
       List<Map> response = await db.rawQuery(familySQL.getAllFamilies());
-      response.map((family) => Family.fromSQLite(family));
-      return response as List<Family>;
+      List<Family> families = [];
+      for (Map item in response) {
+        families.add(Family.fromSQLite(item));
+      }
+      return families;
     } catch (error) {
+      print(error);
       throw Exception();
     }
   }
@@ -67,6 +71,18 @@ class FamilyDAL implements IFamilyStorage {
       List<Map> response = await db.rawQuery(shoppingListSQL.selectAllShoppingListsByFamily(family));
       response.map((shoppingListItem) => ShoppingList.fromSQLite(shoppingListItem));
       return response as List<ShoppingList>;
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
+
+  @override
+  Future<void> deleteFamily(Family family) async {
+    try {
+      int affectedRows = await db.rawDelete(familySQL.deleteFamily(family));
+      if (affectedRows == 0) {
+        throw Exception('Nenhum dado afetado');
+      }
     } catch (error) {
       throw Exception(error);
     }
