@@ -7,6 +7,7 @@ class CreateFamilyHeader extends StatelessWidget {
   Family family;
   bool editIsActive;
   Function onSave;
+  Function onChange;
 
   CreateFamilyHeader({
     Key? key,
@@ -14,7 +15,8 @@ class CreateFamilyHeader extends StatelessWidget {
     required this.family,
     required this.editIsActive,
     required this.onSave,
-  }) : super(key: key);  
+    required this.onChange,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,9 @@ class CreateFamilyHeader extends StatelessWidget {
                 if (value.length > 20) {
                   return 'O limite é 20 caracteres';
                 }
+              },
+              onChanged: (value) {
+                onChange(value);
               },
               style: TextStyle(
                 color: Colors.white,

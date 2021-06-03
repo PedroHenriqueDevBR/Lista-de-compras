@@ -1,10 +1,17 @@
+import 'package:asuka/asuka.dart';
 import 'package:flutter/material.dart';
+import 'package:market_shopping_list/src/shared/dal/family_dal.dart';
+import 'package:market_shopping_list/src/shared/dal/shopping_list_dal.dart';
+import 'package:market_shopping_list/src/shared/dal/sqlite_sql/family_sqlite_sql.dart';
+import 'package:market_shopping_list/src/shared/dal/sqlite_sql/purchase_item_sqlite_sql.dart';
+import 'package:market_shopping_list/src/shared/dal/sqlite_sql/shopping_list_sqlite_sql.dart';
 import 'package:market_shopping_list/src/shared/models/family.dart';
 import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 import 'package:market_shopping_list/src/core/colors_util.dart';
 import 'package:market_shopping_list/src/features/create_family/create_family_controller.dart';
 import 'package:market_shopping_list/src/features/create_family/widgets/create_family_header.dart';
+import 'package:asuka/asuka.dart' as asuka;
 
 class CreateFamilyPage extends StatefulWidget {
   Family? family;
@@ -19,7 +26,16 @@ class CreateFamilyPage extends StatefulWidget {
 
 class _CreateFamilyPageState extends State<CreateFamilyPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late CreateFamilyController controller = CreateFamilyController();
+  CreateFamilyController controller = CreateFamilyController(
+    familyStorage: FamilyDAL(
+      familySQL: FamilySQLite(),
+      shoppingListSQL: ShoppingListSQLite(),
+    ),
+    shoppingStorage: ShoppingListDAL(
+      shoppingListSQL: ShoppingListSQLite(),
+      purchaseItemSQL: PurchaseItemSQLite(),
+    ),
+  );
 
   @override
   void initState() {
@@ -47,7 +63,33 @@ class _CreateFamilyPageState extends State<CreateFamilyPage> {
           ),
           IconButton(
             onPressed: () {
-              controller.deleteFamily(context);
+              if (controller.family.value.id == null) {
+                asuka.showSnackBar(AsukaSnackbar.info('Não há dados para deletar'));
+              } else {
+                asuka.showDialog(
+                  builder: (dialogContext) => AlertDialog(
+                    title: Text('Deletar "${controller.family.value.name}"'),
+                    content: Container(
+                      child: Text('Atenção, você realmente deseja deletar a categoria?'),
+                    ),
+                    actions: [
+                      TextButton(
+                        child: Text('Não'),
+                        onPressed: () {
+                          Navigator.pop(dialogContext);
+                        },
+                      ),
+                      TextButton(
+                        child: Text('Sim'),
+                        onPressed: () async {
+                          await controller.deleteFamilyFromDatabase().then((_) => Navigator.pop(context));
+                          Navigator.pop(dialogContext);
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }
             },
             icon: Icon(Icons.delete),
           ),
@@ -62,6 +104,7 @@ class _CreateFamilyPageState extends State<CreateFamilyPage> {
                 family: controller.family.value,
                 editIsActive: controller.editIsActive.value,
                 onSave: controller.saveFamily,
+                onChange: controller.onChangeTextInput,
               ),
             ),
             Padding(

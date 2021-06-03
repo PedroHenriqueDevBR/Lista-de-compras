@@ -1,17 +1,27 @@
+import 'package:asuka/asuka.dart' as asuka;
 import 'package:asuka/asuka.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rx_notifier/rx_notifier.dart';
+
+import 'package:market_shopping_list/src/shared/interfaces/family_storage_interface.dart';
+import 'package:market_shopping_list/src/shared/interfaces/shopping_list_interface.dart';
 import 'package:market_shopping_list/src/shared/models/family.dart';
 import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
-import 'package:rx_notifier/rx_notifier.dart';
-import 'package:asuka/asuka.dart' as asuka;
 
 class CreateFamilyController {
   RxNotifier<bool> editIsActive = RxNotifier<bool>(true);
   RxList<ShoppingList> shoppingList = RxList<ShoppingList>([]);
   RxNotifier<Family> family = RxNotifier<Family>(Family.withNoData());
+  IFamilyStorage familyStorage;
+  IShoppingListStorage shoppingStorage;
 
-  toggleEditActive() {
+  CreateFamilyController({
+    required this.familyStorage,
+    required this.shoppingStorage,
+  });
+
+  void toggleEditActive() {
     if (family.value.id == null) {
       asuka.showSnackBar(AsukaSnackbar.info('Editar não pode ser desabilitado sem a categoria está salva.'));
     } else {
@@ -25,49 +35,82 @@ class CreateFamilyController {
     getShoppingListFromFamily();
   }
 
-  void getShoppingListFromFamily() {
-    shoppingList.addAll([
-      ShoppingList(id: 1, title: 'Teste 01', description: 'Apenas testes'),
-      ShoppingList(id: 2, title: 'Teste 02', description: 'Apenas testes'),
-      ShoppingList(id: 3, title: 'Teste 03', description: 'Apenas testes'),
-      ShoppingList(id: 4, title: 'Teste 04', description: 'Apenas testes'),
-      ShoppingList(id: 5, title: 'Teste 05', description: 'Apenas testes'),
-      ShoppingList(id: 6, title: 'Teste 06', description: 'Apenas testes'),
-    ]);
+  void getShoppingListFromFamily() async {
+    try {
+      List<ShoppingList> shppingListResponse = await shoppingStorage.selectAllShoppingListsByFamily(family.value);
+      this.shoppingList.addAll(shppingListResponse);
+    } catch (error) {
+      print(error);
+      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao busca lista de compras da categoria ${family.value.name}'));
+    }
   }
 
   void saveFamily() {
-    family.value.id = 1;
-    editIsActive.value = false;
-    asuka.showSnackBar(AsukaSnackbar.success('Dados salvos com sucesso'));
+    print("family");
+    print(family.value.id);
+    print(family.value.name);
+    if (this.family.value.id == null) {
+      createFamily();
+    } else {
+      updateFamily();
+    }
   }
 
-  void deleteFamily(BuildContext pageContext) {
-    if (family.value.id == null) {
-      asuka.showSnackBar(AsukaSnackbar.info('Não há dados para deletar'));
-    } else {
-      asuka.showDialog(
-        builder: (dialogContext) => AlertDialog(
-          title: Text('Deletar Categoria'),
-          content: Container(
-            child: Text('Atenção, você realmente deseja deletar a categoria ${family.value.name}?'),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(pageContext);
-              },
-              child: Text('Sim'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
-              child: Text('Não'),
-            ),
-          ],
-        ),
-      );
+  void createFamily() async {
+    try {
+      if (familyIsValidToSave()) {
+        Family family = await familyStorage.createFamily(this.family.value);
+        this.family.value.id = family.id;
+        editIsActive.value = false;
+        asuka.showSnackBar(asuka.AsukaSnackbar.success('Dados salvos com sucesso'));
+      }
+    } catch (error) {
+      print(error);
+      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Ocorreu um erro ao criar family'));
     }
+  }
+
+  Future<void> deleteFamilyFromDatabase() async {
+    try {
+      await familyStorage.deleteFamily(family.value);
+      asuka.showSnackBar(asuka.AsukaSnackbar.success('Categoria deletada com sucesso'));
+      this.family.value.id = null;
+      editIsActive.value = true;
+    } catch (error) {
+      print(error);
+      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao deletar a categoria'));
+    }
+  }
+
+  void updateFamily() async {
+    try {
+      if (familyIsValidToSave()) {
+        await familyStorage.updateFamily(this.family.value);
+        editIsActive.value = false;
+        asuka.showSnackBar(asuka.AsukaSnackbar.success('Dados atualizados com sucesso'));
+      }
+    } catch (error) {
+      print(error);
+      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Ocorreu um erro ao criar family'));
+    }
+  }
+
+  bool familyIsValidToSave() {
+    if (this.family.value.name.length == 0) {
+      asuka.showSnackBar(
+        asuka.AsukaSnackbar.warning('Digite o nome da categoria'),
+      );
+      return false;
+    } else if (this.family.value.name.length > 20) {
+      asuka.showSnackBar(
+        asuka.AsukaSnackbar.warning('O nome da categoria deve possuir no máximo 20 caracteres'),
+      );
+      return false;
+    }
+    return true;
+  }
+
+  void onChangeTextInput(value) {
+    this.family.value.name = value;
   }
 }
