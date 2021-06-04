@@ -31,8 +31,8 @@ class FamilySQLite implements IFamilySQL {
   @override
   String addShoppingList(Family family, ShoppingList shoppingList) {
     return '''
-    insert into ${DatabaseSQL.SHOPPING_LIST}(title, description, create_at, family)
-    values ('${shoppingList.title}', '${shoppingList.description}', '${shoppingList.createdAt.millisecondsSinceEpoch}', ${family.id});
+    insert into ${DatabaseSQL.SHOPPING_LIST}(title, description, create_at, family, is_done)
+    values ('${shoppingList.title}', '${shoppingList.description}', '${shoppingList.createdAt.millisecondsSinceEpoch}', ${family.id}, ${shoppingList.isDone ? 1 : 0});
     ''';
   }
 
@@ -40,6 +40,15 @@ class FamilySQLite implements IFamilySQL {
   String deleteFamily(Family family) {
     return '''
     delete from ${DatabaseSQL.FAMILY} where id = ${family.id};
+    ''';
+  }
+
+  @override
+  String getFamilyByShoppingList(ShoppingList shoppingList) {
+    return '''
+    select f.* from ${DatabaseSQL.FAMILY} as f inner join ${DatabaseSQL.SHOPPING_LIST} as sl
+    on f.id = sl.family
+    where sl.id = ${shoppingList.id};
     ''';
   }
 }

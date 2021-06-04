@@ -6,6 +6,8 @@ abstract class IFamilyStorage {
 
   Future<List<Family>> getAllFamilies();
 
+  Future<Family> getFamilyByShopping(ShoppingList shoppingList);
+
   Future<Family> updateFamily(Family family);
 
   Future<List<ShoppingList>> addShoppingList(Family family, ShoppingList shoppingList);

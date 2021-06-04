@@ -25,6 +25,7 @@ class ShoppingListSQLite implements IShoppingListSQL {
       update ${DatabaseSQL.SHOPPING_LIST}
       set title = '${shoppingList.title}',
       description = '${shoppingList.description}'
+      is_done = ${shoppingList.isDone ? 1 : 0}
       where id = ${shoppingList.id};
     ''';
   }
@@ -67,6 +68,17 @@ class ShoppingListSQLite implements IShoppingListSQL {
     return '''
       select sum(pi.quantity * pi.price) from ${DatabaseSQL.SHOPPING_LIST} as sl inner join ${DatabaseSQL.PURCHASE_ITEM} pi
       on sl.id = pi.shopping_list where sl.id = ${shoppingList.id};
+    ''';
+  }
+
+  @override
+  String updateShoppingListWithFamily(ShoppingList shoppingList, Family family) {
+    return '''
+      update ${DatabaseSQL.SHOPPING_LIST}
+      set title = '${shoppingList.title}',
+      description = '${shoppingList.description}'
+      family = ${family.id}
+      where id = ${shoppingList.id};
     ''';
   }
 }

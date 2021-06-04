@@ -24,6 +24,14 @@ class ShoppingList {
     }
   }
 
+  ShoppingList.withNoData({
+    this.title: '',
+    this.description = '',
+    this.isDone = false,
+  }) {
+    this.createdAt = DateTime.now();
+  }
+
   void setProductItens(List<PurchaseItem> productItens) => this.productItens = productItens;
 
   void addProductItem(PurchaseItem purchaseItem) => this.productItens.add(purchaseItem);
@@ -33,7 +41,7 @@ class ShoppingList {
       id: map['id'],
       title: map['title'],
       description: map['description'],
-      isDone: map['is_done'],
+      isDone: int.parse(map['is_done']) == 0 ? false : true,
       createdAt: DateTime.fromMillisecondsSinceEpoch(int.parse(map['create_at'])),
     );
   }

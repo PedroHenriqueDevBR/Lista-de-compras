@@ -129,4 +129,19 @@ class ShoppingListDAL implements IShoppingListStorage {
       throw Exception(error);
     }
   }
+
+  @override
+  Future<ShoppingList> updateShoppingListWithFamily(ShoppingList shoppingList, Family family) async {
+    try {
+      Database db = await getDatabase();
+      int affectedRows = await db.rawUpdate(shoppingListSQL.updateShoppingListWithFamily(shoppingList, family));
+      if (affectedRows > 0) {
+        return shoppingList;
+      } else {
+        throw Exception('Nenhum dado afetado');
+      }
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
 }

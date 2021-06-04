@@ -11,6 +11,8 @@ abstract class IShoppingListSQL {
 
   String updateShoppingList(ShoppingList shoppingList);
 
+  String updateShoppingListWithFamily(ShoppingList shoppingList, Family family);
+
   String completeShoppingList(ShoppingList shoppingList);
 
   String redoCompleteShoppingList(ShoppingList shoppingList);

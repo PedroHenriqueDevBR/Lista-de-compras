@@ -6,6 +6,8 @@ abstract class IFamilySQL {
 
   String getAllFamilies();
 
+  String getFamilyByShoppingList(ShoppingList shoppingList);
+
   String updateFamily(Family family);
 
   String addShoppingList(Family family, ShoppingList shoppingList);

@@ -88,4 +88,15 @@ class FamilyDAL implements IFamilyStorage {
       throw Exception(error);
     }
   }
+
+  @override
+  Future<Family> getFamilyByShopping(ShoppingList shoppingList) async {
+    try {
+      Database db = await getDatabase();
+      List<Map> response = await db.rawQuery(familySQL.getFamilyByShoppingList(shoppingList));
+      return Family.fromSQLite(response.first);
+    } catch (error) {
+      throw Exception();
+    }
+  }
 }

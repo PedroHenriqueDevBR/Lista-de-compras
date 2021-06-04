@@ -11,6 +11,8 @@ abstract class IShoppingListStorage {
 
   Future<ShoppingList> updateShoppingList(ShoppingList shoppingList);
 
+  Future<ShoppingList> updateShoppingListWithFamily(ShoppingList shoppingList, Family family);
+
   Future<ShoppingList> completeShoppingList(ShoppingList shoppingList);
 
   Future<ShoppingList> redoCompleteShoppingList(ShoppingList shoppingList);
