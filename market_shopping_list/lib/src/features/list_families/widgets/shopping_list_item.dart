@@ -14,9 +14,8 @@ class ShoppinglistItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(
-        Icons.group_outlined,
-      ),
+      leading: Icon(Icons.shopping_cart_outlined),
+      trailing: Icon(Icons.arrow_forward_ios),
       title: Text(
         shoppingList.title,
         style: TextStyle(),

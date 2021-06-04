@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:market_shopping_list/src/core/colors_util.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 
 import 'package:market_shopping_list/src/shared/models/family.dart';
@@ -25,30 +26,39 @@ class FamilyItem extends StatelessWidget {
       onTap: () {
         this.onClick();
       },
-      child: Card(
-        color: selected ? Colors.indigo.shade200 : Colors.white,
-        child: Container(
-          width: 200,
-          margin: EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  family.name,
-                ),
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 8.0),
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        decoration: BoxDecoration(
+          color: selected ? Colors.white : AppColors.primaryColor,
+          borderRadius: BorderRadius.circular(20.0),
+          border: Border.all(color: Colors.white, width: 2.0),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(width: 4.0),
+            Text(
+              family.name,
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.w600,
+                color: selected ? AppColors.primaryColor : Colors.white,
               ),
-              selected
-                  ? IconButton(
-                      onPressed: () {
-                        onEditClick();
-                      },
-                      icon: Icon(Icons.edit),
-                      visualDensity: VisualDensity.compact,
-                      iconSize: 16.0,
-                    )
-                  : Container(),
-            ],
-          ),
+            ),
+            SizedBox(width: 4.0),
+            selected
+                ? IconButton(
+                    onPressed: () {
+                      onEditClick();
+                    },
+                    icon: Icon(Icons.edit),
+                    visualDensity: VisualDensity.compact,
+                    iconSize: 16.0,
+                  )
+                : Container(),
+          ],
         ),
       ),
     );
