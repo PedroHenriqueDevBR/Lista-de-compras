@@ -11,22 +11,20 @@ class FamilyDAL implements IFamilyStorage {
   IFamilySQL familySQL;
   IShoppingListSQL shoppingListSQL;
   SQFLiteConnection connection = SQFLiteConnection.instance;
-  late Database db;
 
   FamilyDAL({
     required this.familySQL,
     required this.shoppingListSQL,
-  }) {
-    initDatabase();
-  }
+  });
 
-  void initDatabase() async {
-    db = await connection.db;
+  Future<Database> getDatabase() async {
+    return await connection.db;
   }
 
   @override
   Future<Family> createFamily(Family family) async {
     try {
+      Database db = await getDatabase();
       int responseId = await db.rawInsert(familySQL.createFamily(family));
       family.id = responseId;
       return family;
@@ -38,6 +36,7 @@ class FamilyDAL implements IFamilyStorage {
   @override
   Future<List<Family>> getAllFamilies() async {
     try {
+      Database db = await getDatabase();
       List<Map> response = await db.rawQuery(familySQL.getAllFamilies());
       List<Family> families = [];
       for (Map item in response) {
@@ -53,6 +52,7 @@ class FamilyDAL implements IFamilyStorage {
   @override
   Future<Family> updateFamily(Family family) async {
     try {
+      Database db = await getDatabase();
       int affectedRows = await db.rawUpdate(familySQL.updateFamily(family));
       if (affectedRows > 0) {
         return family;
@@ -67,6 +67,7 @@ class FamilyDAL implements IFamilyStorage {
   @override
   Future<List<ShoppingList>> addShoppingList(Family family, ShoppingList shoppingList) async {
     try {
+      Database db = await getDatabase();
       await db.rawInsert(familySQL.addShoppingList(family, shoppingList));
       List<Map> response = await db.rawQuery(shoppingListSQL.selectAllShoppingListsByFamily(family));
       response.map((shoppingListItem) => ShoppingList.fromSQLite(shoppingListItem));
@@ -79,6 +80,7 @@ class FamilyDAL implements IFamilyStorage {
   @override
   Future<void> deleteFamily(Family family) async {
     try {
+      Database db = await getDatabase();
       int affectedRows = await db.rawDelete(familySQL.deleteFamily(family));
       if (affectedRows == 0) {
         throw Exception('Nenhum dado afetado');

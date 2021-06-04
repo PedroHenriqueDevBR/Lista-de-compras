@@ -9,19 +9,19 @@ import 'package:market_shopping_list/src/shared/services/sqflite_connection.dart
 class PurchaseItemDAL implements IPurchaseItemStorage {
   IPurchaseItemSQL purchaseItemSQL;
   SQFLiteConnection connection = SQFLiteConnection.instance;
-  late Database db;
 
   PurchaseItemDAL({
     required this.purchaseItemSQL,
   });
 
-  void initDatabase() async {
-    db = await connection.db;
+  Future<Database> getDatabase() async {
+    return await connection.db;
   }
 
   @override
   Future<List<PurchaseItem>> getAllPurchaseItensFromShoppingList(ShoppingList shoppingList) async {
     try {
+      Database db = await getDatabase();
       List<Map> response = await db.rawQuery(purchaseItemSQL.getAllPurchaseItensFromShoppingList(shoppingList));
       response.map((item) => PurchaseItem.fromSQLite(item));
       return response as List<PurchaseItem>;
@@ -33,6 +33,7 @@ class PurchaseItemDAL implements IPurchaseItemStorage {
   @override
   Future<PurchaseItem> updatePurchaseItem(PurchaseItem purchaseItem) async {
     try {
+      Database db = await getDatabase();
       int affectedRows = await db.rawUpdate(purchaseItemSQL.updatePurchaseItem(purchaseItem));
       if (affectedRows > 0) {
         return purchaseItem;
@@ -47,6 +48,7 @@ class PurchaseItemDAL implements IPurchaseItemStorage {
   @override
   Future<void> removePurchaseItem(PurchaseItem purchaseItem) async {
     try {
+      Database db = await getDatabase();
       int affectedRows = await db.rawDelete(purchaseItemSQL.removePurchaseItem(purchaseItem));
       if (affectedRows == 0) {
         throw Exception('Nenhum dado afetado');

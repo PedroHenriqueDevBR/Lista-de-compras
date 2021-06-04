@@ -12,25 +12,24 @@ class ShoppingListDAL implements IShoppingListStorage {
   IShoppingListSQL shoppingListSQL;
   IPurchaseItemSQL purchaseItemSQL;
   SQFLiteConnection connection = SQFLiteConnection.instance;
-  late Database db;
 
   ShoppingListDAL({
     required this.shoppingListSQL,
     required this.purchaseItemSQL,
-  }) {
-    initDatabase();
-  }
+  });
 
-  void initDatabase() async {
-    db = await connection.db;
+  Future<Database> getDatabase() async {
+    return await connection.db;
   }
 
   @override
   Future<List<ShoppingList>> selectAllShoppingLists() async {
     try {
+      Database db = await getDatabase();
       List<Map> response = await db.rawQuery(shoppingListSQL.selectAllShoppingLists());
-      response.map((item) => ShoppingList.fromSQLite(item));
-      return response as List<ShoppingList>;
+      List<ShoppingList> shoppingList = [];
+      for (Map item in response) shoppingList.add(ShoppingList.fromSQLite(item));
+      return shoppingList;
     } catch (error) {
       throw Exception(error);
     }
@@ -39,6 +38,7 @@ class ShoppingListDAL implements IShoppingListStorage {
   @override
   Future<List<ShoppingList>> selectAllShoppingListsByFamily(Family family) async {
     try {
+      Database db = await getDatabase();
       List<Map> response = await db.rawQuery(shoppingListSQL.selectAllShoppingListsByFamily(family));
       List<ShoppingList> shoppingList = [];
       for (Map item in response) shoppingList.add(ShoppingList.fromSQLite(item));
@@ -51,6 +51,7 @@ class ShoppingListDAL implements IShoppingListStorage {
   @override
   Future<ShoppingList> updateShoppingList(ShoppingList shoppingList) async {
     try {
+      Database db = await getDatabase();
       int affectedRows = await db.rawUpdate(shoppingListSQL.updateShoppingList(shoppingList));
       if (affectedRows > 0) {
         return shoppingList;
@@ -65,6 +66,7 @@ class ShoppingListDAL implements IShoppingListStorage {
   @override
   Future<ShoppingList> completeShoppingList(ShoppingList shoppingList) async {
     try {
+      Database db = await getDatabase();
       int affectedRows = await db.rawUpdate(shoppingListSQL.completeShoppingList(shoppingList));
       if (affectedRows > 0) {
         return shoppingList;
@@ -79,6 +81,7 @@ class ShoppingListDAL implements IShoppingListStorage {
   @override
   Future<ShoppingList> redoCompleteShoppingList(ShoppingList shoppingList) async {
     try {
+      Database db = await getDatabase();
       int affectedRows = await db.rawUpdate(shoppingListSQL.redoCompleteShoppingList(shoppingList));
       if (affectedRows > 0) {
         return shoppingList;
@@ -93,6 +96,7 @@ class ShoppingListDAL implements IShoppingListStorage {
   @override
   Future<void> removeShoppingList(ShoppingList shoppingList) async {
     try {
+      Database db = await getDatabase();
       int affectedRows = await db.rawDelete(shoppingListSQL.removeShoppingList(shoppingList));
       if (affectedRows == 0) {
         throw Exception('Nenhum dado afetado');
@@ -105,6 +109,7 @@ class ShoppingListDAL implements IShoppingListStorage {
   @override
   Future<double> calculateShoppingListPrice(ShoppingList shoppingList) async {
     try {
+      Database db = await getDatabase();
       List<Map> response = await db.rawQuery(shoppingListSQL.calculateShoppingListPrice(shoppingList));
       return double.parse(response[0]['sum']);
     } catch (error) {
@@ -115,6 +120,7 @@ class ShoppingListDAL implements IShoppingListStorage {
   @override
   Future<List<PurchaseItem>> addItemToShoppingList(ShoppingList shoppingList, PurchaseItem purchaseItem) async {
     try {
+      Database db = await getDatabase();
       await db.rawInsert(shoppingListSQL.addItemToShoppingList(shoppingList, purchaseItem));
       List<Map> response = await db.rawQuery(purchaseItemSQL.getAllPurchaseItensFromShoppingList(shoppingList));
       response.map((item) => PurchaseItem.fromSQLite(item));
