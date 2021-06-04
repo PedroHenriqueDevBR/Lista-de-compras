@@ -7,6 +7,7 @@ class FamilyItem extends StatelessWidget {
   Size size;
   Family family;
   Function onClick;
+  Function onEditClick;
   bool selected;
 
   FamilyItem({
@@ -14,6 +15,7 @@ class FamilyItem extends StatelessWidget {
     required this.size,
     required this.family,
     required this.onClick,
+    required this.onEditClick,
     required this.selected,
   }) : super(key: key);
 
@@ -37,7 +39,9 @@ class FamilyItem extends StatelessWidget {
               ),
               selected
                   ? IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        onEditClick();
+                      },
                       icon: Icon(Icons.edit),
                       visualDensity: VisualDensity.compact,
                       iconSize: 16.0,

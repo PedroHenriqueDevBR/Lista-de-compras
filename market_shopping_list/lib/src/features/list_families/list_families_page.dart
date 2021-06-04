@@ -6,6 +6,12 @@ import 'package:market_shopping_list/src/features/list_families/widgets/family_i
 import 'package:market_shopping_list/src/features/list_families/widgets/list_families_header.dart';
 import 'package:market_shopping_list/src/features/list_families/widgets/shopping_list_item.dart';
 import 'package:asuka/asuka.dart' as asuka;
+import 'package:market_shopping_list/src/shared/dal/family_dal.dart';
+import 'package:market_shopping_list/src/shared/dal/shopping_list_dal.dart';
+import 'package:market_shopping_list/src/shared/dal/sqlite_sql/family_sqlite_sql.dart';
+import 'package:market_shopping_list/src/shared/dal/sqlite_sql/purchase_item_sqlite_sql.dart';
+import 'package:market_shopping_list/src/shared/dal/sqlite_sql/shopping_list_sqlite_sql.dart';
+import 'package:market_shopping_list/src/shared/models/family.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 
 class ListFamiliesPage extends StatefulWidget {
@@ -14,7 +20,10 @@ class ListFamiliesPage extends StatefulWidget {
 }
 
 class _ListFamiliesPageState extends State<ListFamiliesPage> {
-  ListFamiliesController controller = ListFamiliesController();
+  ListFamiliesController controller = ListFamiliesController(
+    familyStorage: FamilyDAL(familySQL: FamilySQLite(), shoppingListSQL: ShoppingListSQLite()),
+    shoppingStorage: ShoppingListDAL(shoppingListSQL: ShoppingListSQLite(), purchaseItemSQL: PurchaseItemSQLite()),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -28,38 +37,20 @@ class _ListFamiliesPageState extends State<ListFamiliesPage> {
         child: Column(
           children: [
             ListFamiliesHeader(size: size),
-            familyList(size),
+            RxBuilder(
+              builder: (_) => familyList(
+                size: size,
+                families: controller.families,
+                selectedFamily: controller.selectedFamily.value,
+              ),
+            ),
             shoppingListWidget(),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          asuka.showBottomSheet(
-            (context) {
-              return BottomSheetOptions(
-                familyFunction: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => CreateFamilyPage(),
-                    ),
-                  );
-                },
-                shoppingListFunction: () {
-                  print('Deve ser implementada');
-                },
-              );
-            },
-            elevation: 4.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8.0),
-                topRight: Radius.circular(8.0),
-              ),
-              side: BorderSide(color: Colors.grey.shade200),
-            ),
-          );
+          showBottomDialog();
         },
         label: Text('Adicionar'),
         icon: Icon(Icons.add),
@@ -67,22 +58,48 @@ class _ListFamiliesPageState extends State<ListFamiliesPage> {
     );
   }
 
-  Widget familyList(Size size) {
+  void showBottomDialog() {
+    asuka.showBottomSheet(
+      (context) {
+        return BottomSheetOptions(
+          familyFunction: () {
+            controller.goToCreateFamilyPage(context);
+          },
+          shoppingListFunction: () {
+            controller.goToCreateShoppingListPage(context);
+          },
+        );
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8.0),
+          topRight: Radius.circular(8.0),
+        ),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      elevation: 4.0,
+    );
+  }
+
+  Widget familyList({required Size size, required List<Family> families, required int selectedFamily}) {
     return Container(
       width: size.width,
       height: 60,
       child: ListView.builder(
-        itemCount: controller.families.length,
+        itemCount: families.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (_, index) {
           return RxBuilder(
             builder: (_) => FamilyItem(
               size: size,
-              family: controller.families[index],
+              family: families[index],
               onClick: () {
                 controller.selectfamily(index);
               },
-              selected: controller.selectedFamily.value == index,
+              onEditClick: () {
+                controller.goToCreateFamilyPage(context, family: controller.families[index]);
+              },
+              selected: selectedFamily == index,
             ),
           );
         },

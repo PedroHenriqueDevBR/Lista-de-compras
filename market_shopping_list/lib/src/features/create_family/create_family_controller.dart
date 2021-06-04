@@ -1,7 +1,5 @@
 import 'package:asuka/asuka.dart' as asuka;
 import 'package:asuka/asuka.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 
 import 'package:market_shopping_list/src/shared/interfaces/family_storage_interface.dart';
@@ -38,6 +36,7 @@ class CreateFamilyController {
   void getShoppingListFromFamily() async {
     try {
       List<ShoppingList> shppingListResponse = await shoppingStorage.selectAllShoppingListsByFamily(family.value);
+      this.shoppingList.clear();
       this.shoppingList.addAll(shppingListResponse);
     } catch (error) {
       print(error);
@@ -46,9 +45,6 @@ class CreateFamilyController {
   }
 
   void saveFamily() {
-    print("family");
-    print(family.value.id);
-    print(family.value.name);
     if (this.family.value.id == null) {
       createFamily();
     } else {

@@ -39,7 +39,9 @@ class _CreateFamilyPageState extends State<CreateFamilyPage> {
 
   @override
   void initState() {
-    if (widget.family != null) controller.initFamilyData(widget.family!);
+    if (widget.family != null) {
+      controller.initFamilyData(widget.family!);
+    }
     controller.editIsActive.addListener(() {
       setState(() {});
     });
