@@ -44,7 +44,6 @@ class FamilyDAL implements IFamilyStorage {
       }
       return families;
     } catch (error) {
-      print(error);
       throw Exception();
     }
   }

@@ -35,6 +35,10 @@ class SQFLiteConnection {
   }
 
   FutureOr<void> _onCreate(Database db, int version) {
-    db.execute(DatabaseSQL.DATABASE_CREATOR_SQL);
+    db.transaction((reference) async {
+      reference.execute(DatabaseSQL.FAMILY_CREATOR_SQL);
+      reference.execute(DatabaseSQL.SHOPPING_CREATOR_SQL);
+      reference.execute(DatabaseSQL.PURCHASE_CREATOR_SQL);
+    });
   }
 }

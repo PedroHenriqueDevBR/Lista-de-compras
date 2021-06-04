@@ -3,12 +3,14 @@ class DatabaseSQL {
   static final SHOPPING_LIST = 'shopping_list';
   static final PURCHASE_ITEM = 'purchase_item';
 
-  static final DATABASE_CREATOR_SQL = """
+  static final FAMILY_CREATOR_SQL = """
   CREATE TABLE `${FAMILY}` (
     `id`	INTEGER PRIMARY KEY AUTOINCREMENT,
     `name`	TEXT NOT NULL
   );
+  """;
 
+  static final SHOPPING_CREATOR_SQL = """
   CREATE TABLE `${SHOPPING_LIST}` (
     `id`	INTEGER PRIMARY KEY AUTOINCREMENT,
     `title`	TEXT,
@@ -18,7 +20,9 @@ class DatabaseSQL {
     `family`	INTEGER,
     FOREIGN KEY(`${FAMILY}`) REFERENCES `${FAMILY}`(`id`)
   );
+  """;
 
+  static final PURCHASE_CREATOR_SQL = """
   CREATE TABLE `${PURCHASE_ITEM}` (
     `id`	INTEGER PRIMARY KEY AUTOINCREMENT,
     `product_name`	TEXT NOT NULL,
