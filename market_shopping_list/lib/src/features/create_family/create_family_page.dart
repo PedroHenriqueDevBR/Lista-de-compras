@@ -120,17 +120,19 @@ class _CreateFamilyPageState extends State<CreateFamilyPage> {
             ),
             Divider(),
             Expanded(
-              child: ListView.separated(
-                itemCount: controller.shoppingList.length,
-                separatorBuilder: (context, index) => Divider(),
-                itemBuilder: (context, index) {
-                  ShoppingList shoppingItem = controller.shoppingList[index];
-                  return ListTile(
-                    leading: Icon(Icons.shopping_cart_outlined),
-                    title: Text(shoppingItem.title),
-                    subtitle: Text(shoppingItem.description != null ? shoppingItem.description! : ''),
-                  );
-                },
+              child: RxBuilder(
+                builder: (_) => ListView.separated(
+                  itemCount: controller.shoppingList.length,
+                  separatorBuilder: (context, index) => Divider(),
+                  itemBuilder: (context, index) {
+                    ShoppingList shoppingItem = controller.shoppingList[index];
+                    return ListTile(
+                      leading: Icon(Icons.shopping_cart_outlined),
+                      title: Text(shoppingItem.title),
+                      subtitle: Text(shoppingItem.description != null ? shoppingItem.description! : ''),
+                    );
+                  },
+                ),
               ),
             ),
           ],

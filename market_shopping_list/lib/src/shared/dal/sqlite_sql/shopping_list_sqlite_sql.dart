@@ -8,7 +8,7 @@ class ShoppingListSQLite implements IShoppingListSQL {
   @override
   String selectAllShoppingListsByFamily(Family family) {
     return '''
-      select * from ${DatabaseSQL.SHOPPING_LIST} where family = 1;
+      select * from ${DatabaseSQL.SHOPPING_LIST} where family = ${family.id};
     ''';
   }
 
