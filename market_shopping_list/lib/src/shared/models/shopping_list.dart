@@ -41,7 +41,7 @@ class ShoppingList {
       id: map['id'],
       title: map['title'],
       description: map['description'],
-      isDone: int.parse(map['is_done']) == 0 ? false : true,
+      isDone: map['is_done'] == 0 ? false : true,
       createdAt: DateTime.fromMillisecondsSinceEpoch(int.parse(map['create_at'])),
     );
   }

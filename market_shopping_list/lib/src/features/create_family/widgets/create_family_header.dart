@@ -49,18 +49,18 @@ class CreateFamilyHeader extends StatelessWidget {
               ),
               decoration: InputDecoration(
                 enabledBorder: editIsActive
-                    ? UnderlineInputBorder(
+                    ? OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
                       )
                     : InputBorder.none,
                 focusedBorder: editIsActive
-                    ? UnderlineInputBorder(
+                    ? OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
                       )
                     : InputBorder.none,
                 errorStyle: TextStyle(color: Colors.white),
                 errorBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.secondaryColor)),
-                border: editIsActive ? UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)) : InputBorder.none,
+                border: editIsActive ? OutlineInputBorder(borderSide: BorderSide(color: Colors.white)) : InputBorder.none,
               ),
             ),
           ),

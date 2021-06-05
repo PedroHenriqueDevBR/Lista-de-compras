@@ -14,11 +14,7 @@ class ListFamiliesController {
   RxNotifier<int> selectedFamily = RxNotifier<int>(-1);
   RxList<int> pendingShoppingList = RxList<int>();
   RxList<Family> families = RxList<Family>();
-  RxList<ShoppingList> shoppingList = RxList<ShoppingList>([
-    ShoppingList(id: 1, title: 'Lista 01', description: 'Uma decrição qualquer'),
-    ShoppingList(id: 2, title: 'Lista 02', description: 'Uma decrição qualquer'),
-    ShoppingList(id: 3, title: 'Lista 03', description: 'Uma decrição qualquer'),
-  ]);
+  RxList<ShoppingList> shoppingList = RxList<ShoppingList>([]);
   IFamilyStorage familyStorage;
   IShoppingListStorage shoppingStorage;
 
@@ -27,6 +23,7 @@ class ListFamiliesController {
     required this.shoppingStorage,
   }) {
     getAllFamiliesFromDatabase();
+    getAllShoppingListFromDatabase();
   }
 
   void getAllFamiliesFromDatabase() async {
@@ -35,9 +32,18 @@ class ListFamiliesController {
       this.families.clear();
       this.families.addAll(familiesResponse);
     } catch (error) {
-      asuka.showSnackBar(
-        asuka.AsukaSnackbar.alert('Erro ao carregar lista de categorias'),
-      );
+      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao carregar lista de categorias'));
+    }
+  }
+
+  void getAllShoppingListFromDatabase() async {
+    try {
+      List<ShoppingList> shoppingListResponse = await shoppingStorage.selectAllShoppingLists();
+      this.shoppingList.clear();
+      this.shoppingList.addAll(shoppingListResponse);
+    } catch (error) {
+      print(error);
+      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao carregar listas de compras.'));
     }
   }
 
@@ -61,15 +67,15 @@ class ListFamiliesController {
           family: family,
         ),
       ),
-    ).then((value) => getAllFamiliesFromDatabase());
+    ).then((_) => getAllFamiliesFromDatabase());
   }
 
-  void goToCreateShoppingListPage(BuildContext context) {
-    Navigator.push(
+  void goToCreateShoppingListPage(BuildContext context) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => CreateShoppingListPage(),
       ),
-    );
+    ).then((_) => getAllShoppingListFromDatabase());
   }
 }
