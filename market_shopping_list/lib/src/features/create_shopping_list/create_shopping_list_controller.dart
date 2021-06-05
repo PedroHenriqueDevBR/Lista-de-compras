@@ -1,5 +1,7 @@
 import 'package:asuka/asuka.dart' as asuka;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:market_shopping_list/src/features/create_family/create_family_page.dart';
 import 'package:market_shopping_list/src/shared/models/family.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 import 'package:market_shopping_list/src/shared/interfaces/family_storage_interface.dart';
@@ -10,13 +12,7 @@ class CreateShoppingListController {
   RxNotifier<ShoppingList> shopping = RxNotifier<ShoppingList>(ShoppingList.withNoData());
   RxNotifier<Family> family = RxNotifier<Family>(Family.withNoData());
   RxNotifier<bool> doneOptionIsSelected = RxNotifier<bool>(false);
-  List<Family> families = [
-    Family(id: 1, name: 'categoria 01'),
-    Family(id: 2, name: 'categoria 02'),
-    Family(id: 3, name: 'categoria 03'),
-    Family(id: 4, name: 'categoria 04'),
-    Family(id: 5, name: 'categoria 05'),
-  ];
+  RxList<Family> families = RxList<Family>();
   int selectedFamilyID = 0;
 
   IShoppingListStorage shoppingStorage;
@@ -26,8 +22,17 @@ class CreateShoppingListController {
     required this.shoppingStorage,
     required this.familyStorage,
   }) {
-    if (families.isNotEmpty) {
-      selectedFamilyID = families.first.id!;
+    getFamiliesFromDatabase();
+  }
+
+  void getFamiliesFromDatabase() async {
+    try {
+      List<Family> familiesResponse = await familyStorage.getAllFamilies();
+      this.families.clear();
+      this.families.addAll(familiesResponse);
+      initFamilyID();
+    } catch (error) {
+      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao buscar as categorias cadastradas'));
     }
   }
 
@@ -42,12 +47,15 @@ class CreateShoppingListController {
     }
   }
 
-  void toggleDoneOption(bool value) {
-    doneOptionIsSelected.value = value;
+  void initFamilyID() {
+    if (families.isNotEmpty) {
+      selectedFamilyID = families.first.id!;
+      family.value = families.first;
+    }
   }
 
-  void getFamilies() {
-    families.addAll([Family(id: 1, name: 'ADS')]);
+  void toggleDoneOption(bool value) {
+    doneOptionIsSelected.value = value;
   }
 
   void saveShopping(BuildContext context) {
@@ -63,10 +71,11 @@ class CreateShoppingListController {
       shopping.value.isDone = doneOptionIsSelected.value;
       if (familyIsValidToCreateShoppingList()) {
         await familyStorage.addShoppingList(family.value, shopping.value);
-        asuka.showSnackBar(asuka.AsukaSnackbar.message('Lista de compras criada'));
+        asuka.showSnackBar(asuka.AsukaSnackbar.success('Lista de compras criada'));
         Navigator.pop(context);
       }
     } catch (error) {
+      print(error);
       asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao criar lista de compras'));
     }
   }
@@ -85,6 +94,7 @@ class CreateShoppingListController {
 
   bool familyIsValidToCreateShoppingList() {
     if (family.value.id == null) {
+      asuka.showSnackBar(asuka.AsukaSnackbar.warning('Selecione uma categoria antes de salvar a lista de compras'));
       return false;
     }
     return true;
@@ -98,5 +108,14 @@ class CreateShoppingListController {
       }
     }
     selectedFamilyID = id;
+  }
+
+  void goToCreateFamilyPage(BuildContext context) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateFamilyPage(),
+      ),
+    ).then((_) => this.getFamiliesFromDatabase());
   }
 }

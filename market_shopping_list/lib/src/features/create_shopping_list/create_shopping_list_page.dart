@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:market_shopping_list/src/features/create_family/create_family_page.dart';
 import 'package:market_shopping_list/src/shared/dal/family_dal.dart';
 import 'package:market_shopping_list/src/shared/dal/shopping_list_dal.dart';
 import 'package:market_shopping_list/src/shared/dal/sqlite_sql/family_sqlite_sql.dart';
@@ -96,19 +97,36 @@ class _CreateShoppingListPageState extends State<CreateShoppingListPage> {
                 SizedBox(height: 8.0),
                 Container(
                   padding: EdgeInsets.all(8.0),
-                  color: Colors.grey.shade100,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.blueGrey.shade200, width: 1),
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
                   child: Row(
                     children: [
-                      Expanded(
-                        child: DropdownButton<int>(
-                          value: controller.selectedFamilyID,
-                          items: controller.families.map((Family family) => DropdownMenuItem<int>(value: family.id!, child: Text(family.name))).toList(),
-                          onChanged: (value) {
-                            controller.setFamilyByID(value!);
-                            setState(() {});
-                          },
+                      RxBuilder(
+                        builder: (_) => Expanded(
+                          child: DropdownButton<int>(
+                            isExpanded: true,
+                            value: controller.selectedFamilyID,
+                            dropdownColor: Colors.white,
+                            icon: Icon(Icons.keyboard_arrow_down),
+                            underline: Container(),
+                            items: controller.families.map((Family family) => DropdownMenuItem<int>(value: family.id!, child: Text(family.name))).toList(),
+                            onChanged: (value) {
+                              controller.setFamilyByID(value!);
+                              setState(() {});
+                            },
+                          ),
                         ),
                       ),
+                      IconButton(
+                          color: AppColors.primaryColorLight,
+                          iconSize: 30,
+                          onPressed: () {
+                            controller.goToCreateFamilyPage(context);
+                          },
+                          icon: Icon(Icons.add)),
                     ],
                   ),
                 ),
@@ -127,13 +145,13 @@ class _CreateShoppingListPageState extends State<CreateShoppingListPage> {
                   children: [
                     Expanded(
                       child: OutlinedButton(
+                        child: Text('Salvar', style: TextStyle(color: Colors.white)),
+                        style: OutlinedButton.styleFrom(backgroundColor: AppColors.primaryColor),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             controller.saveShopping(context);
                           }
                         },
-                        child: Text('Salvar', style: TextStyle(color: Colors.white)),
-                        style: OutlinedButton.styleFrom(backgroundColor: AppColors.primaryColor),
                       ),
                     ),
                   ],

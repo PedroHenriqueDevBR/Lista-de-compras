@@ -69,8 +69,11 @@ class FamilyDAL implements IFamilyStorage {
       Database db = await getDatabase();
       await db.rawInsert(familySQL.addShoppingList(family, shoppingList));
       List<Map> response = await db.rawQuery(shoppingListSQL.selectAllShoppingListsByFamily(family));
-      response.map((shoppingListItem) => ShoppingList.fromSQLite(shoppingListItem));
-      return response as List<ShoppingList>;
+      List<ShoppingList> shoppingResponse = [];
+      for (Map item in response) {
+        shoppingResponse.add(ShoppingList.fromSQLite(item));
+      }
+      return shoppingResponse;
     } catch (error) {
       throw Exception(error);
     }
