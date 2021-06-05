@@ -54,54 +54,54 @@ class _ListFamiliesPageState extends State<ListFamiliesPage> {
     return Container(
       width: size.width,
       height: 50,
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () => controller.goToCreateFamilyPage(context),
-            child: Container(
-              width: 50,
-              height: 50,
-              padding: EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 26,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(45),
-                border: Border.all(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            GestureDetector(
+              onTap: () => controller.goToCreateFamilyPage(context),
+              child: Container(
+                width: 50,
+                height: 50,
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.add,
                   color: Colors.white,
-                  width: 2,
+                  size: 26,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(45),
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(width: 8.0),
-          Expanded(
-            child: Scrollbar(
-              isAlwaysShown: false,
-              child: ListView.builder(
-                itemCount: families.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (_, index) {
-                  return RxBuilder(
-                    builder: (_) => FamilyItem(
-                      size: size,
-                      family: families[index],
-                      onClick: () {
-                        controller.selectfamily(index);
-                      },
-                      onEditClick: () {
-                        controller.goToCreateFamilyPage(context, family: controller.families[index]);
-                      },
-                      selected: selectedFamily == index,
-                    ),
-                  );
-                },
-              ),
+            SizedBox(width: 8.0),
+            ListView.builder(
+              itemCount: families.length,
+              scrollDirection: Axis.horizontal,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (_, index) {
+                return RxBuilder(
+                  builder: (_) => FamilyItem(
+                    size: size,
+                    family: families[index],
+                    onClick: () {
+                      controller.selectfamily(index);
+                    },
+                    onEditClick: () {
+                      controller.goToCreateFamilyPage(context, family: controller.families[index]);
+                    },
+                    selected: selectedFamily == index,
+                  ),
+                );
+              },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

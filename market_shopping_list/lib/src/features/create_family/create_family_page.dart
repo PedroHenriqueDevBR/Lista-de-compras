@@ -63,38 +63,40 @@ class _CreateFamilyPageState extends State<CreateFamilyPage> {
               ),
             ),
           ),
-          IconButton(
-            onPressed: () {
-              if (controller.family.value.id == null) {
-                asuka.showSnackBar(AsukaSnackbar.info('Não há dados para deletar'));
-              } else {
-                asuka.showDialog(
-                  builder: (dialogContext) => AlertDialog(
-                    title: Text('Deletar "${controller.family.value.name}"'),
-                    content: Container(
-                      child: Text('Atenção, você realmente deseja deletar a categoria?'),
-                    ),
-                    actions: [
-                      TextButton(
-                        child: Text('Não'),
-                        onPressed: () {
-                          Navigator.pop(dialogContext);
-                        },
-                      ),
-                      TextButton(
-                        child: Text('Sim'),
-                        onPressed: () async {
-                          await controller.deleteFamilyFromDatabase().then((_) => Navigator.pop(context));
-                          Navigator.pop(dialogContext);
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              }
-            },
-            icon: Icon(Icons.delete),
-          ),
+          controller.family.value.id == null
+              ? Container()
+              : IconButton(
+                  onPressed: () {
+                    if (controller.family.value.id == null) {
+                      asuka.showSnackBar(AsukaSnackbar.info('Não há dados para deletar'));
+                    } else {
+                      asuka.showDialog(
+                        builder: (dialogContext) => AlertDialog(
+                          title: Text('Deletar "${controller.family.value.name}"'),
+                          content: Container(
+                            child: Text('Atenção, você realmente deseja deletar a categoria?'),
+                          ),
+                          actions: [
+                            TextButton(
+                              child: Text('Não'),
+                              onPressed: () {
+                                Navigator.pop(dialogContext);
+                              },
+                            ),
+                            TextButton(
+                              child: Text('Sim'),
+                              onPressed: () async {
+                                await controller.deleteFamilyFromDatabase().then((_) => Navigator.pop(context));
+                                Navigator.pop(dialogContext);
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                  icon: Icon(Icons.delete),
+                ),
         ],
       ),
       body: Container(
