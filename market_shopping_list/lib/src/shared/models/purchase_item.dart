@@ -13,6 +13,12 @@ class PurchaseItem {
     required this.productName,
   });
 
+  PurchaseItem.withNoData({
+    this.productName = '',
+    this.quantity = 0,
+    this.price = 0.0,
+  });
+
   factory PurchaseItem.fromSQLite(Map map) {
     return PurchaseItem(
       id: map['id'],

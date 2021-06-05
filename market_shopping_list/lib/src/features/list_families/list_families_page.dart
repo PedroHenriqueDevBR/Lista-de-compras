@@ -10,6 +10,7 @@ import 'package:market_shopping_list/src/shared/dal/sqlite_sql/family_sqlite_sql
 import 'package:market_shopping_list/src/shared/dal/sqlite_sql/purchase_item_sqlite_sql.dart';
 import 'package:market_shopping_list/src/shared/dal/sqlite_sql/shopping_list_sqlite_sql.dart';
 import 'package:market_shopping_list/src/shared/models/family.dart';
+import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 
 class ListFamiliesPage extends StatefulWidget {
@@ -127,7 +128,13 @@ class _ListFamiliesPageState extends State<ListFamiliesPage> {
               shrinkWrap: true,
               itemCount: controller.shoppingList.length,
               itemBuilder: (_, index) {
-                return ShoppinglistItem(shoppingList: controller.shoppingList[index]);
+                ShoppingList currentShopping = controller.shoppingList[index];
+                return ShoppinglistItem(
+                  shoppingList: currentShopping,
+                  onTap: () {
+                    controller.goToShowShoppingListPage(context: context, shopping: currentShopping);
+                  },
+                );
               },
             ),
           ),

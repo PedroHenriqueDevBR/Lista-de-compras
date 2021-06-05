@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/features/create_family/create_family_page.dart';
 import 'package:market_shopping_list/src/features/create_shopping_list/create_shopping_list_page.dart';
+import 'package:market_shopping_list/src/features/show_shopping_list/show_shopping_list_page.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 import 'package:market_shopping_list/src/shared/interfaces/family_storage_interface.dart';
 import 'package:market_shopping_list/src/shared/interfaces/shopping_list_interface.dart';
@@ -75,6 +76,18 @@ class ListFamiliesController {
       context,
       MaterialPageRoute(
         builder: (_) => CreateShoppingListPage(),
+      ),
+    ).then((_) => getAllShoppingListFromDatabase());
+  }
+
+  void goToShowShoppingListPage({
+    required BuildContext context,
+    required ShoppingList shopping,
+  }) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ShowShoppingListPage(shopping: shopping),
       ),
     ).then((_) => getAllShoppingListFromDatabase());
   }

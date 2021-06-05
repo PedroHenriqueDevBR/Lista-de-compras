@@ -5,10 +5,12 @@ import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
 
 class ShoppinglistItem extends StatelessWidget {
   ShoppingList shoppingList;
+  Function onTap;
 
   ShoppinglistItem({
     Key? key,
     required this.shoppingList,
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -25,6 +27,9 @@ class ShoppinglistItem extends StatelessWidget {
         style: TextStyle(),
       ),
       selectedTileColor: AppColors.primaryColor,
+      onTap: () {
+        onTap();
+      },
     );
   }
 }
