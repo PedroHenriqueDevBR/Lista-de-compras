@@ -1,0 +1,148 @@
+import 'package:flutter/material.dart';
+import 'package:market_shopping_list/src/shared/dal/family_dal.dart';
+import 'package:market_shopping_list/src/shared/dal/shopping_list_dal.dart';
+import 'package:market_shopping_list/src/shared/dal/sqlite_sql/family_sqlite_sql.dart';
+import 'package:market_shopping_list/src/shared/dal/sqlite_sql/purchase_item_sqlite_sql.dart';
+import 'package:market_shopping_list/src/shared/dal/sqlite_sql/shopping_list_sqlite_sql.dart';
+import 'package:market_shopping_list/src/shared/models/family.dart';
+import 'package:rx_notifier/rx_notifier.dart';
+import 'package:asuka/asuka.dart' as asuka;
+import 'package:market_shopping_list/src/core/colors_util.dart';
+import 'package:market_shopping_list/src/features/create_shopping_list/create_shopping_list_controller.dart';
+import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
+
+class CreateShoppingListPage extends StatefulWidget {
+  ShoppingList? shoppingList;
+  CreateShoppingListPage({
+    Key? key,
+    this.shoppingList,
+  }) : super(key: key);
+  @override
+  _CreateShoppingListPageState createState() => _CreateShoppingListPageState();
+}
+
+class _CreateShoppingListPageState extends State<CreateShoppingListPage> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  CreateShoppingListController controller = CreateShoppingListController(
+    familyStorage: FamilyDAL(
+      familySQL: FamilySQLite(),
+      shoppingListSQL: ShoppingListSQLite(),
+    ),
+    shoppingStorage: ShoppingListDAL(
+      shoppingListSQL: ShoppingListSQLite(),
+      purchaseItemSQL: PurchaseItemSQLite(),
+    ),
+  );
+
+  @override
+  void initState() {
+    if (widget.shoppingList != null) {
+      controller.initShoppingData(widget.shoppingList!);
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Lista de compras'),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(8.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  initialValue: controller.shopping.value.title,
+                  decoration: InputDecoration(
+                    hintText: 'Compras do mês',
+                    labelText: 'Titulo',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    controller.shopping.value.title = value;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Informe o título da lista de compras';
+                    } else if (value.length > 30) {
+                      return 'O limite para o título é de 30 caracteres';
+                    }
+                  },
+                ),
+                SizedBox(height: 8.0),
+                TextFormField(
+                  initialValue: controller.shopping.value.description,
+                  minLines: 1,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    hintText: 'Primeira compra do mês de junho',
+                    labelText: 'Descrição',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    controller.shopping.value.description = value;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Digite uma descrição, isso ajudará você no futuro';
+                    }
+                  },
+                ),
+                SizedBox(height: 8.0),
+                Container(
+                  padding: EdgeInsets.all(8.0),
+                  color: Colors.grey.shade100,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: DropdownButton<int>(
+                          value: controller.selectedFamilyID,
+                          items: controller.families.map((Family family) => DropdownMenuItem<int>(value: family.id!, child: Text(family.name))).toList(),
+                          onChanged: (value) {
+                            controller.setFamilyByID(value!);
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                RxBuilder(
+                  builder: (context) => SwitchListTile(
+                    title: Text('Concluir lista de compras'),
+                    value: controller.doneOptionIsSelected.value,
+                    onChanged: (value) {
+                      controller.toggleDoneOption(value);
+                    },
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            controller.saveShopping(context);
+                          }
+                        },
+                        child: Text('Salvar', style: TextStyle(color: Colors.white)),
+                        style: OutlinedButton.styleFrom(backgroundColor: AppColors.primaryColor),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

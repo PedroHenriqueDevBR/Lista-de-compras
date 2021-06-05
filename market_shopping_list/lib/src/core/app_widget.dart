@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:asuka/asuka.dart' as asuka;
 import 'package:market_shopping_list/src/core/colors_util.dart';
-import 'package:market_shopping_list/src/features/create_family/create_family_page.dart';
 import 'package:market_shopping_list/src/features/list_families/list_families_page.dart';
 
 class AppWidget extends StatelessWidget {
   void changeNavigatorColor() {
-    dynamic systemTheme = SystemUiOverlayStyle.dark.copyWith(
+    dynamic systemTheme = SystemUiOverlayStyle.light.copyWith(
       statusBarColor: AppColors.primaryColor,
       systemNavigationBarColor: AppColors.primaryColor,
     );
