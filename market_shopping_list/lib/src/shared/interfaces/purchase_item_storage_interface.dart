@@ -7,4 +7,6 @@ abstract class IPurchaseItemStorage {
   Future<PurchaseItem> updatePurchaseItem(PurchaseItem purchaseItem);
 
   Future<void> removePurchaseItem(PurchaseItem purchaseItem);
+
+  Future<void> deletePurchaseItemByShoppingList(ShoppingList shoppingList);
 }

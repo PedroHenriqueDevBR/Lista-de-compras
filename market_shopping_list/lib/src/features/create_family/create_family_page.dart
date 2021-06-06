@@ -74,7 +74,7 @@ class _CreateFamilyPageState extends State<CreateFamilyPage> {
                         builder: (dialogContext) => AlertDialog(
                           title: Text('Deletar "${controller.family.value.name}"'),
                           content: Container(
-                            child: Text('Atenção, você realmente deseja deletar a categoria?'),
+                            child: Text('Atenção, você realmente deseja deletar a categoria?\nTodas as listas de compras vinculadas serão deletadas também'),
                           ),
                           actions: [
                             TextButton(

@@ -20,4 +20,6 @@ abstract class IShoppingListStorage {
   Future<double> calculateShoppingListPrice(ShoppingList shoppingList);
 
   Future<List<PurchaseItem>> addItemToShoppingList(ShoppingList shoppingList, PurchaseItem purchaseItem);
+
+  Future<void> deleteToShoppingListByFamily(Family family);
 }

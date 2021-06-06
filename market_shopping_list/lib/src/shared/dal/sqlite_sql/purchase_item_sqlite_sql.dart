@@ -28,4 +28,11 @@ class PurchaseItemSQLite implements IPurchaseItemSQL {
       delete from ${DatabaseSQL.PURCHASE_ITEM} where id = ${purchaseItem.id};
     ''';
   }
+
+  @override
+  String deletePurchaseItemByShoppingList(ShoppingList shoppingList) {
+    return '''
+      delete from ${DatabaseSQL.PURCHASE_ITEM} where shopping_list = ${shoppingList.id};
+    ''';
+  }
 }

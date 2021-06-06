@@ -88,8 +88,10 @@ class ShowShoppingListController {
   Future<void> deleteShoppingList() async {
     try {
       await shoppingStorage.removeShoppingList(shoppingList.value);
+      await itemStorage.deletePurchaseItemByShoppingList(shoppingList.value);
       asuka.showSnackBar(asuka.AsukaSnackbar.success('Lista de compras deletada'));
     } catch (error) {
+      print(error);
       asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao deletar lista de compras'));
     }
   }

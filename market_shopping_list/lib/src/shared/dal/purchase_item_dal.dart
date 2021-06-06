@@ -60,4 +60,14 @@ class PurchaseItemDAL implements IPurchaseItemStorage {
       throw Exception(error);
     }
   }
+
+  @override
+  Future<void> deletePurchaseItemByShoppingList(ShoppingList shoppingList) async {
+    try {
+      Database db = await getDatabase();
+      await db.rawDelete(purchaseItemSQL.deletePurchaseItemByShoppingList(shoppingList));
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
 }

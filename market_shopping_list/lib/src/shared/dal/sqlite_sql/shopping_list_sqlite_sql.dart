@@ -82,4 +82,11 @@ class ShoppingListSQLite implements IShoppingListSQL {
       where id = ${shoppingList.id};
     ''';
   }
+
+  @override
+  String deleteShoppingListByFamilyId(Family family) {
+    return '''
+    delete from ${DatabaseSQL.SHOPPING_LIST} where family = ${family.id};
+    ''';
+  }
 }

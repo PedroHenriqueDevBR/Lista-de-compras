@@ -20,4 +20,6 @@ abstract class IShoppingListSQL {
   String calculateShoppingListPrice(ShoppingList shoppingList);
 
   String addItemToShoppingList(ShoppingList shoppingList, PurchaseItem purchaseItem);
+
+  String deleteShoppingListByFamilyId(Family family);
 }

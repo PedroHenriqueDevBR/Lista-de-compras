@@ -151,4 +151,14 @@ class ShoppingListDAL implements IShoppingListStorage {
       throw Exception(error);
     }
   }
+
+  @override
+  Future<void> deleteToShoppingListByFamily(Family family) async {
+    try {
+      Database db = await getDatabase();
+      await db.rawDelete(shoppingListSQL.deleteShoppingListByFamilyId(family));
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
 }

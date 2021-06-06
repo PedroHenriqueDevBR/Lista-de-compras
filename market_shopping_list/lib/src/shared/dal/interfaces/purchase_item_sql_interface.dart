@@ -7,4 +7,6 @@ abstract class IPurchaseItemSQL {
   String updatePurchaseItem(PurchaseItem purchaseItem);
 
   String removePurchaseItem(PurchaseItem purchaseItem);
+
+  String deletePurchaseItemByShoppingList(ShoppingList shoppingList);
 }

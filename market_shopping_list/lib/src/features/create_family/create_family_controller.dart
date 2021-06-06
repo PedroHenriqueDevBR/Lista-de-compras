@@ -73,6 +73,7 @@ class CreateFamilyController {
   Future<void> deleteFamilyFromDatabase() async {
     try {
       await familyStorage.deleteFamily(family.value);
+      await shoppingStorage.deleteToShoppingListByFamily(family.value);
       asuka.showSnackBar(asuka.AsukaSnackbar.success('Categoria deletada com sucesso'));
       this.family.value.id = null;
       editIsActive.value = true;
