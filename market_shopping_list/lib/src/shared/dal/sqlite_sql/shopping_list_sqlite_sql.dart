@@ -76,7 +76,8 @@ class ShoppingListSQLite implements IShoppingListSQL {
     return '''
       update ${DatabaseSQL.SHOPPING_LIST}
       set title = '${shoppingList.title}',
-      description = '${shoppingList.description}'
+      description = '${shoppingList.description}',
+      is_done = ${shoppingList.isDone ? 1 : 0},
       family = ${family.id}
       where id = ${shoppingList.id};
     ''';

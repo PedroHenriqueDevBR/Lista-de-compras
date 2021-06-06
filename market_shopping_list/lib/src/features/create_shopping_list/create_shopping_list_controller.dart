@@ -13,6 +13,8 @@ class CreateShoppingListController {
   RxNotifier<Family> family = RxNotifier<Family>(Family.withNoData());
   RxNotifier<bool> doneOptionIsSelected = RxNotifier<bool>(false);
   RxList<Family> families = RxList<Family>();
+  TextEditingController txtTitle = TextEditingController(text: '');
+  TextEditingController txtDescription = TextEditingController(text: '');
   int selectedFamilyID = 0;
 
   IShoppingListStorage shoppingStorage;
@@ -30,18 +32,20 @@ class CreateShoppingListController {
       List<Family> familiesResponse = await familyStorage.getAllFamilies();
       this.families.clear();
       this.families.addAll(familiesResponse);
-      initFamilyID();
+      this.initFamilyID();
     } catch (error) {
       asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao buscar as categorias cadastradas'));
     }
   }
 
-  void initShoppingData(ShoppingList shopping) async {
+  Future<void> initShoppingData(ShoppingList shopping) async {
     try {
       Family familyResponse = await familyStorage.getFamilyByShopping(shopping);
       this.family.value = familyResponse;
       this.shopping.value = shopping;
       this.doneOptionIsSelected.value = shopping.isDone;
+      this.txtTitle.text = shopping.title;
+      this.txtDescription.text = shopping.description != null ? shopping.description! : '';
     } catch (error) {
       asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro carregar dados da lista de compras'));
     }
@@ -85,10 +89,10 @@ class CreateShoppingListController {
       shopping.value.isDone = doneOptionIsSelected.value;
       if (familyIsValidToCreateShoppingList()) {
         await shoppingStorage.updateShoppingListWithFamily(shopping.value, family.value);
-        asuka.showSnackBar(asuka.AsukaSnackbar.message('Lista de compras atualizada'));
+        asuka.showSnackBar(asuka.AsukaSnackbar.success('Lista de compras atualizada'));
       }
     } catch (error) {
-      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao criar lista de compras'));
+      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao atualizar lista de compras'));
     }
   }
 

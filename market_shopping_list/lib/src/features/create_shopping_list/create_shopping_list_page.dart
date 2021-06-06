@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:market_shopping_list/src/features/create_family/create_family_page.dart';
 import 'package:market_shopping_list/src/shared/dal/family_dal.dart';
 import 'package:market_shopping_list/src/shared/dal/shopping_list_dal.dart';
 import 'package:market_shopping_list/src/shared/dal/sqlite_sql/family_sqlite_sql.dart';
 import 'package:market_shopping_list/src/shared/dal/sqlite_sql/purchase_item_sqlite_sql.dart';
 import 'package:market_shopping_list/src/shared/dal/sqlite_sql/shopping_list_sqlite_sql.dart';
 import 'package:market_shopping_list/src/shared/models/family.dart';
-import 'package:rx_notifier/rx_notifier.dart';
-import 'package:asuka/asuka.dart' as asuka;
 import 'package:market_shopping_list/src/core/colors_util.dart';
 import 'package:market_shopping_list/src/features/create_shopping_list/create_shopping_list_controller.dart';
 import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
+import 'package:rx_notifier/rx_notifier.dart';
 
 class CreateShoppingListPage extends StatefulWidget {
   ShoppingList? shoppingList;
@@ -35,11 +33,15 @@ class _CreateShoppingListPageState extends State<CreateShoppingListPage> {
     ),
   );
 
-  @override
-  void initState() {
+  void initData() async {
     if (widget.shoppingList != null) {
       controller.initShoppingData(widget.shoppingList!);
     }
+  }
+
+  @override
+  void initState() {
+    initData();
     super.initState();
   }
 
@@ -58,7 +60,7 @@ class _CreateShoppingListPageState extends State<CreateShoppingListPage> {
             child: Column(
               children: [
                 TextFormField(
-                  initialValue: controller.shopping.value.title,
+                  controller: controller.txtTitle,
                   decoration: InputDecoration(
                     hintText: 'Compras do mês',
                     labelText: 'Titulo',
@@ -77,7 +79,7 @@ class _CreateShoppingListPageState extends State<CreateShoppingListPage> {
                 ),
                 SizedBox(height: 8.0),
                 TextFormField(
-                  initialValue: controller.shopping.value.description,
+                  controller: controller.txtDescription,
                   minLines: 1,
                   maxLines: 5,
                   decoration: InputDecoration(
