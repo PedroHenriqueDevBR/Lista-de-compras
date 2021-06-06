@@ -17,7 +17,7 @@ class ShoppinglistItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(Icons.shopping_cart_outlined),
-      trailing: Icon(Icons.arrow_forward_ios),
+      trailing: shoppingList.isDone ? Icon(Icons.check) : null,
       title: Text(
         shoppingList.title,
         style: TextStyle(),

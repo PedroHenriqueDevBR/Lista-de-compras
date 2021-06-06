@@ -59,7 +59,7 @@ class ShoppingListSQLite implements IShoppingListSQL {
   String addItemToShoppingList(ShoppingList shoppingList, PurchaseItem purchaseItem) {
     return '''
       insert into ${DatabaseSQL.PURCHASE_ITEM}(product_name, quantity, price, shopping_list)
-      values ('${purchaseItem}', ${purchaseItem.quantity}, ${purchaseItem.price}, ${shoppingList.id});
+      values ('${purchaseItem.productName}', ${purchaseItem.quantity}, ${purchaseItem.price}, ${shoppingList.id});
     ''';
   }
 

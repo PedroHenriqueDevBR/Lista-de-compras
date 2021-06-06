@@ -23,8 +23,11 @@ class PurchaseItemDAL implements IPurchaseItemStorage {
     try {
       Database db = await getDatabase();
       List<Map> response = await db.rawQuery(purchaseItemSQL.getAllPurchaseItensFromShoppingList(shoppingList));
-      response.map((item) => PurchaseItem.fromSQLite(item));
-      return response as List<PurchaseItem>;
+      List<PurchaseItem> itens = [];
+      for (Map item in response) {
+        itens.add(PurchaseItem.fromSQLite(item));
+      }
+      return itens;
     } catch (error) {
       throw Exception(error);
     }

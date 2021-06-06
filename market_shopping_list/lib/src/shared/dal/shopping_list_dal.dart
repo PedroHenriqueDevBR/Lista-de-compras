@@ -127,8 +127,11 @@ class ShoppingListDAL implements IShoppingListStorage {
       Database db = await getDatabase();
       await db.rawInsert(shoppingListSQL.addItemToShoppingList(shoppingList, purchaseItem));
       List<Map> response = await db.rawQuery(purchaseItemSQL.getAllPurchaseItensFromShoppingList(shoppingList));
-      response.map((item) => PurchaseItem.fromSQLite(item));
-      return response as List<PurchaseItem>;
+      List<PurchaseItem> itens = [];
+      for (Map item in response) {
+        itens.add(PurchaseItem.fromSQLite(item));
+      }
+      return itens;
     } catch (error) {
       throw Exception(error);
     }

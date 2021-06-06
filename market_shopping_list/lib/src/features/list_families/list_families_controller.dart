@@ -68,7 +68,10 @@ class ListFamiliesController {
           family: family,
         ),
       ),
-    ).then((_) => getAllFamiliesFromDatabase());
+    ).then((_) {
+      this.getAllFamiliesFromDatabase();
+      this.getAllShoppingListFromDatabase();
+    });
   }
 
   void goToCreateShoppingListPage(BuildContext context) async {

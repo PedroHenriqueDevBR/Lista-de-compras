@@ -1,5 +1,9 @@
 import 'package:asuka/asuka.dart' as asuka;
 import 'package:asuka/asuka.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:market_shopping_list/src/features/create_shopping_list/create_shopping_list_page.dart';
+import 'package:market_shopping_list/src/features/show_shopping_list/show_shopping_list_page.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 
 import 'package:market_shopping_list/src/shared/interfaces/family_storage_interface.dart';
@@ -108,5 +112,23 @@ class CreateFamilyController {
 
   void onChangeTextInput(value) {
     this.family.value.name = value;
+  }
+
+  void goToCreateShoppingList(BuildContext context) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateShoppingListPage(),
+      ),
+    ).then((_) => this.getShoppingListFromFamily());
+  }
+
+  void goToShowShoppingList(BuildContext context, ShoppingList shoppingList) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ShowShoppingListPage(shopping: shoppingList),
+      ),
+    ).then((_) => this.getShoppingListFromFamily());
   }
 }

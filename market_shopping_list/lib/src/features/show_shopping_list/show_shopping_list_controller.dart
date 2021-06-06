@@ -1,19 +1,42 @@
+import 'package:asuka/asuka.dart' as asuka;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rx_notifier/rx_notifier.dart';
+
 import 'package:market_shopping_list/src/features/create_shopping_list/create_shopping_list_page.dart';
+import 'package:market_shopping_list/src/shared/interfaces/purchase_item_storage_interface.dart';
+import 'package:market_shopping_list/src/shared/interfaces/shopping_list_interface.dart';
 import 'package:market_shopping_list/src/shared/models/purchase_item.dart';
 import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
-import 'package:rx_notifier/rx_notifier.dart';
-import 'package:asuka/asuka.dart' as asuka;
 
 class ShowShoppingListController {
-  ShoppingList shoppingList;
+  RxNotifier<ShoppingList> shoppingList = RxNotifier<ShoppingList>(ShoppingList.withNoData());
   RxList<PurchaseItem> itens = RxList<PurchaseItem>([]);
+  RxNotifier<bool> isDone = RxNotifier<bool>(false);
   PurchaseItem purchaseItem = PurchaseItem.withNoData();
 
+  IShoppingListStorage shoppingStorage;
+  IPurchaseItemStorage itemStorage;
+
   ShowShoppingListController({
-    required this.shoppingList,
-  });
+    required ShoppingList shoppingList,
+    required this.shoppingStorage,
+    required this.itemStorage,
+  }) {
+    this.shoppingList.value = shoppingList;
+    getAllItensFromShoppingList(shoppingList);
+  }
+
+  void getAllItensFromShoppingList(ShoppingList shoppingList) async {
+    try {
+      List<PurchaseItem> itensResponse = await itemStorage.getAllPurchaseItensFromShoppingList(shoppingList);
+      this.itens.clear();
+      this.itens.addAll(itensResponse);
+    } catch (error) {
+      print(error);
+      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao carregar lista de itens do carrinho'));
+    }
+  }
 
   void saveItem({PurchaseItem? purchaseItem}) {
     if (purchaseItem == null) {
@@ -24,22 +47,62 @@ class ShowShoppingListController {
   }
 
   void registerItem() async {
-    itens.add(purchaseItem);
+    try {
+      await shoppingStorage.addItemToShoppingList(shoppingList.value, purchaseItem);
+      itens.add(purchaseItem);
+    } catch (error) {
+      print(error);
+      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao adicionar item no carrinho'));
+    }
   }
 
-  void updateItem(PurchaseItem purchaseItem) {
-    int index = itens.indexOf(purchaseItem);
-    if (index != -1) {
-      itens[index] = this.purchaseItem;
-    } else {
-      asuka.showSnackBar(asuka.AsukaSnackbar.warning('Item não localizado'));
+  void updateItem(PurchaseItem purchaseItem) async {
+    try {
+      int index = itens.indexOf(purchaseItem);
+      if (index != -1) {
+        await itemStorage.updatePurchaseItem(purchaseItem);
+        itens[index] = this.purchaseItem;
+      } else {
+        asuka.showSnackBar(asuka.AsukaSnackbar.warning('Item não localizado'));
+      }
+    } catch (error) {
+      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao adicionar item no carrinho'));
     }
   }
 
   void removeItem(PurchaseItem purchaseItem) {
-    bool isRemoved = itens.remove(purchaseItem);
-    if (isRemoved) {
-      asuka.showSnackBar(asuka.AsukaSnackbar.info('Item removido com sucesso'));
+    try {
+      bool isRemoved = itens.remove(purchaseItem);
+      if (isRemoved) {
+        asuka.showSnackBar(asuka.AsukaSnackbar.info('Item removido com sucesso'));
+      } else {
+        asuka.showSnackBar(asuka.AsukaSnackbar.warning('Item não localizado no carrinho'));
+      }
+    } catch (error) {
+      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao remover item do carrinho'));
+    }
+  }
+
+  Future<void> deleteShoppingList() async {
+    try {
+      await shoppingStorage.removeShoppingList(shoppingList.value);
+      asuka.showSnackBar(asuka.AsukaSnackbar.success('Lista de compras deletada'));
+    } catch (error) {
+      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao deletar lista de compras'));
+    }
+  }
+
+  void toggleDoneShoppingList() async {
+    try {
+      if (this.shoppingList.value.isDone) {
+        await shoppingStorage.redoCompleteShoppingList(shoppingList.value);
+      } else {
+        await shoppingStorage.completeShoppingList(shoppingList.value);
+      }
+      this.shoppingList.value.isDone = !this.shoppingList.value.isDone;
+      isDone.value = !isDone.value;
+    } catch (error) {
+      asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao mudar status'));
     }
   }
 
@@ -48,16 +111,16 @@ class ShowShoppingListController {
       context,
       MaterialPageRoute(
         builder: (context) => CreateShoppingListPage(
-          shoppingList: this.shoppingList,
+          shoppingList: this.shoppingList.value,
         ),
       ),
     );
   }
 
   String creationDate() {
-    String day = formatDate(shoppingList.createdAt.day);
-    String month = formatDate(shoppingList.createdAt.month);
-    String year = formatDate(shoppingList.createdAt.year);
+    String day = formatDate(shoppingList.value.createdAt.day);
+    String month = formatDate(shoppingList.value.createdAt.month);
+    String year = formatDate(shoppingList.value.createdAt.year);
     return '${day}/${month}/${year}';
   }
 

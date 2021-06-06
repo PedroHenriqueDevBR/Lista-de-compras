@@ -128,8 +128,12 @@ class _CreateFamilyPageState extends State<CreateFamilyPage> {
                     ShoppingList shoppingItem = controller.shoppingList[index];
                     return ListTile(
                       leading: Icon(Icons.shopping_cart_outlined),
+                      trailing: shoppingItem.isDone ? Icon(Icons.check) : null,
                       title: Text(shoppingItem.title),
                       subtitle: Text(shoppingItem.description != null ? shoppingItem.description! : ''),
+                      onTap: () {
+                        controller.goToShowShoppingList(context, shoppingItem);
+                      },
                     );
                   },
                 ),
@@ -140,7 +144,9 @@ class _CreateFamilyPageState extends State<CreateFamilyPage> {
       ),
       floatingActionButton: controller.family.value.id != null
           ? FloatingActionButton.extended(
-              onPressed: () {},
+              onPressed: () {
+                controller.goToCreateShoppingList(context);
+              },
               label: Text('Lista de compras'),
               icon: Icon(Icons.add),
             )

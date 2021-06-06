@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:market_shopping_list/src/core/colors_util.dart';
 import 'package:market_shopping_list/src/features/show_shopping_list/show_shopping_list_controller.dart';
+import 'package:market_shopping_list/src/shared/dal/purchase_item_dal.dart';
+import 'package:market_shopping_list/src/shared/dal/shopping_list_dal.dart';
+import 'package:market_shopping_list/src/shared/dal/sqlite_sql/purchase_item_sqlite_sql.dart';
+import 'package:market_shopping_list/src/shared/dal/sqlite_sql/shopping_list_sqlite_sql.dart';
 import 'package:market_shopping_list/src/shared/models/purchase_item.dart';
 import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
 import 'package:asuka/asuka.dart' as asuka;
@@ -22,7 +26,19 @@ class SshoSshopping_listLatePage extends State<ShowShoppingListPage> {
 
   @override
   void initState() {
-    controller = ShowShoppingListController(shoppingList: widget.shopping);
+    controller = ShowShoppingListController(
+      shoppingList: widget.shopping,
+      shoppingStorage: ShoppingListDAL(
+        shoppingListSQL: ShoppingListSQLite(),
+        purchaseItemSQL: PurchaseItemSQLite(),
+      ),
+      itemStorage: PurchaseItemDAL(
+        purchaseItemSQL: PurchaseItemSQLite(),
+      ),
+    );
+    controller.isDone.addListener(() {
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -41,35 +57,44 @@ class SshoSshopping_listLatePage extends State<ShowShoppingListPage> {
                   padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
                   child: Column(
                     children: [
-                      Text(
-                        controller.shoppingList.title,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 28.0,
-                          fontWeight: FontWeight.w500,
+                      RxBuilder(
+                        builder: (_) => Text(
+                          controller.shoppingList.value.title,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28.0,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                      Text(
-                        controller.shoppingList.description != null ? controller.shoppingList.description! : '',
-                        style: TextStyle(
-                          color: Colors.grey.shade200,
+                      RxBuilder(
+                        builder: (_) => Text(
+                          controller.shoppingList.value.description != null ? controller.shoppingList.value.description! : '',
+                          style: TextStyle(
+                            color: Colors.grey.shade200,
+                          ),
                         ),
                       ),
                       SizedBox(height: 8.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Chip(
-                            backgroundColor: AppColors.primaryColor.withAlpha(50),
-                            avatar: CircleAvatar(
-                              backgroundColor: controller.shoppingList.isDone ? Colors.lightGreen : AppColors.primaryColorLight,
-                            ),
-                            label: Text(
-                              '${controller.shoppingList.isDone ? "Concluída" : "Andamento"}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.primaryColor,
+                          GestureDetector(
+                            onTap: controller.toggleDoneShoppingList,
+                            child: RxBuilder(
+                              builder: (_) => Chip(
+                                backgroundColor: AppColors.primaryColor.withAlpha(50),
+                                avatar: CircleAvatar(
+                                  backgroundColor: controller.shoppingList.value.isDone ? Colors.lightGreen : AppColors.primaryColorLight,
+                                ),
+                                label: Text(
+                                  '${controller.shoppingList.value.isDone ? "Concluída" : "Andamento"}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -293,7 +318,8 @@ class SshoSshopping_listLatePage extends State<ShowShoppingListPage> {
           ),
           TextButton(
             child: Text('Sim'),
-            onPressed: () {
+            onPressed: () async {
+              await controller.deleteShoppingList();
               Navigator.pop(dialogContext);
               Navigator.pop(context);
             },
