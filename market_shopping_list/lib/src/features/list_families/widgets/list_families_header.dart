@@ -4,11 +4,13 @@ import 'package:market_shopping_list/src/core/colors_util.dart';
 class ListFamiliesHeader extends StatelessWidget {
   Size size;
   Widget? child;
+  int pendingCount;
 
   ListFamiliesHeader({
     Key? key,
     required this.size,
     this.child,
+    required this.pendingCount,
   }) : super(key: key);
 
   @override
@@ -23,10 +25,17 @@ class ListFamiliesHeader extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                Icon(
-                  Icons.info_outline,
-                  color: Colors.white,
-                  size: 40.0,
+                Container(
+                  padding: EdgeInsets.all(4.0),
+                  child: Icon(
+                    Icons.info_outline,
+                    color: Colors.white,
+                    size: 40.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withAlpha(50),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
                 ),
                 SizedBox(width: 16.0),
                 Expanded(
@@ -34,25 +43,11 @@ class ListFamiliesHeader extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Voce possui 2 listas de compras pendentes',
+                        this.pendingCount == 0 ? 'Nenhuma lista de compras pendente ' : 'Voce possui ${this.pendingCount} lista(s) de compras pendentes',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      TextButton(
-                        style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
-                        onPressed: () {
-                          print('Deve ser implementado'); // Implementar
-                        },
-                        child: Text(
-                          'Clique aqui e saiba mais',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
                         ),
                       ),
                     ],

@@ -13,7 +13,7 @@ import 'package:asuka/asuka.dart' as asuka;
 class ListFamiliesController {
   RxNotifier<bool> dialVisible = RxNotifier<bool>(false);
   RxNotifier<int> selectedFamily = RxNotifier<int>(-1);
-  RxList<int> pendingShoppingList = RxList<int>();
+  RxNotifier<int> pendingShoppingListCount = RxNotifier<int>(0);
   RxList<Family> families = RxList<Family>();
   RxList<ShoppingList> shoppingList = RxList<ShoppingList>([]);
   IFamilyStorage familyStorage;
@@ -42,10 +42,21 @@ class ListFamiliesController {
       List<ShoppingList> shoppingListResponse = await shoppingStorage.selectAllShoppingLists();
       this.shoppingList.clear();
       this.shoppingList.addAll(shoppingListResponse);
+      this.countPendingShoppingList();
     } catch (error) {
       print(error);
       asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao carregar listas de compras.'));
     }
+  }
+
+  void countPendingShoppingList() {
+    int count = 0;
+    for (ShoppingList list in this.shoppingList) {
+      if (!list.isDone) {
+        count++;
+      }
+    }
+    this.pendingShoppingListCount.value = count;
   }
 
   void setDialVisible(bool value) {

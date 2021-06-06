@@ -13,6 +13,7 @@ class ShowShoppingListController {
   RxNotifier<ShoppingList> shoppingList = RxNotifier<ShoppingList>(ShoppingList.withNoData());
   RxList<PurchaseItem> itens = RxList<PurchaseItem>([]);
   RxNotifier<bool> isDone = RxNotifier<bool>(false);
+  RxNotifier<double> total = RxNotifier<double>(0.0);
   PurchaseItem purchaseItem = PurchaseItem.withNoData();
 
   IShoppingListStorage shoppingStorage;
@@ -49,7 +50,7 @@ class ShowShoppingListController {
   void registerItem() async {
     try {
       await shoppingStorage.addItemToShoppingList(shoppingList.value, purchaseItem);
-      itens.add(purchaseItem);
+      this.getAllItensFromShoppingList(shoppingList.value);
     } catch (error) {
       print(error);
       asuka.showSnackBar(asuka.AsukaSnackbar.alert('Erro ao adicionar item no carrinho'));
@@ -61,7 +62,7 @@ class ShowShoppingListController {
       int index = itens.indexOf(purchaseItem);
       if (index != -1) {
         await itemStorage.updatePurchaseItem(purchaseItem);
-        itens[index] = this.purchaseItem;
+        this.getAllItensFromShoppingList(shoppingList.value);
       } else {
         asuka.showSnackBar(asuka.AsukaSnackbar.warning('Item não localizado'));
       }
@@ -70,11 +71,12 @@ class ShowShoppingListController {
     }
   }
 
-  void removeItem(PurchaseItem purchaseItem) {
+  void removeItem(PurchaseItem purchaseItem) async {
     try {
+      await itemStorage.removePurchaseItem(purchaseItem);
       bool isRemoved = itens.remove(purchaseItem);
       if (isRemoved) {
-        asuka.showSnackBar(asuka.AsukaSnackbar.info('Item removido com sucesso'));
+        asuka.showSnackBar(asuka.AsukaSnackbar.success('Item removido com sucesso'));
       } else {
         asuka.showSnackBar(asuka.AsukaSnackbar.warning('Item não localizado no carrinho'));
       }
@@ -131,12 +133,12 @@ class ShowShoppingListController {
     return '${value}';
   }
 
-  double getTotal() {
-    double total = 0;
+  void getTotal() {
+    double out = 0;
     for (PurchaseItem item in itens) {
-      total += (item.price * item.quantity);
+      out += (item.price * item.quantity);
     }
-    return total;
+    this.total.value = out;
   }
 
   bool isNumeric(String? str) {

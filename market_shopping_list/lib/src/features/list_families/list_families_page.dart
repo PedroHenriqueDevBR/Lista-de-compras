@@ -32,13 +32,16 @@ class _ListFamiliesPageState extends State<ListFamiliesPage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              ListFamiliesHeader(
-                size: size,
-                child: RxBuilder(
-                  builder: (_) => familyList(
-                    size: size,
-                    families: controller.families,
-                    selectedFamily: controller.selectedFamily.value,
+              RxBuilder(
+                builder: (_) => ListFamiliesHeader(
+                  size: size,
+                  pendingCount: controller.pendingShoppingListCount.value,
+                  child: RxBuilder(
+                    builder: (_) => familyList(
+                      size: size,
+                      families: controller.families,
+                      selectedFamily: controller.selectedFamily.value,
+                    ),
                   ),
                 ),
               ),

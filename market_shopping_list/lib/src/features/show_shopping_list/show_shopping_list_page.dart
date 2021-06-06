@@ -39,6 +39,9 @@ class SshoSshopping_listLatePage extends State<ShowShoppingListPage> {
     controller.isDone.addListener(() {
       setState(() {});
     });
+    controller.itens.addListener(() {
+      controller.getTotal();
+    });
     super.initState();
   }
 
@@ -111,14 +114,16 @@ class SshoSshopping_listLatePage extends State<ShowShoppingListPage> {
                           ),
                         ],
                       ),
-                      Chip(
-                        backgroundColor: Colors.white,
-                        label: Text(
-                          'Total: R\$ ${controller.formatDoubleValue(controller.getTotal())}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryColor,
-                            fontSize: 16.0,
+                      RxBuilder(
+                        builder: (context) => Chip(
+                          backgroundColor: Colors.white,
+                          label: Text(
+                            'Total: R\$ ${controller.formatDoubleValue(controller.total.value)}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryColor,
+                              fontSize: 16.0,
+                            ),
                           ),
                         ),
                       ),
@@ -167,6 +172,7 @@ class SshoSshopping_listLatePage extends State<ShowShoppingListPage> {
                     },
                   ),
                 ),
+                SizedBox(height: 75.0),
               ],
             ),
           ),
