@@ -83,27 +83,39 @@ class _ListFamiliesPageState extends State<ListFamiliesPage> {
               ),
             ),
             SizedBox(width: 8.0),
-            ListView.builder(
-              itemCount: families.length,
-              scrollDirection: Axis.horizontal,
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemBuilder: (_, index) {
-                return RxBuilder(
-                  builder: (_) => FamilyItem(
-                    size: size,
-                    family: families[index],
-                    onClick: () {
-                      controller.selectfamily(index);
+            controller.families.length != 0
+                ? ListView.builder(
+                    itemCount: families.length,
+                    scrollDirection: Axis.horizontal,
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (_, index) {
+                      return RxBuilder(
+                        builder: (_) => FamilyItem(
+                          size: size,
+                          family: families[index],
+                          onClick: () {
+                            controller.selectfamily(index);
+                          },
+                          onEditClick: () {
+                            controller.goToCreateFamilyPage(context, family: controller.families[index]);
+                          },
+                          selected: selectedFamily == index,
+                        ),
+                      );
                     },
-                    onEditClick: () {
-                      controller.goToCreateFamilyPage(context, family: controller.families[index]);
-                    },
-                    selected: selectedFamily == index,
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      'Nova categoria',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ),
-                );
-              },
-            ),
           ],
         ),
       ),
@@ -125,21 +137,47 @@ class _ListFamiliesPageState extends State<ListFamiliesPage> {
           ),
           Divider(),
           RxBuilder(
-            builder: (context) => ListView.separated(
-              separatorBuilder: (_, __) => Divider(),
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: controller.shoppingList.length,
-              itemBuilder: (_, index) {
-                ShoppingList currentShopping = controller.shoppingList[index];
-                return ShoppinglistItem(
-                  shoppingList: currentShopping,
-                  onTap: () {
-                    controller.goToShowShoppingListPage(context: context, shopping: currentShopping);
+            builder: (context) {
+              if (controller.shoppingList.length != 0) {
+                return ListView.separated(
+                  separatorBuilder: (_, __) => Divider(),
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: controller.shoppingList.length,
+                  itemBuilder: (_, index) {
+                    ShoppingList currentShopping = controller.shoppingList[index];
+                    return ShoppinglistItem(
+                      shoppingList: currentShopping,
+                      onTap: () {
+                        controller.goToShowShoppingListPage(context: context, shopping: currentShopping);
+                      },
+                    );
                   },
                 );
-              },
-            ),
+              }
+              return Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.list_alt_outlined,
+                        size: 50,
+                        color: AppColors.primaryColor,
+                      ),
+                      SizedBox(height: 8.0),
+                      Text(
+                        'nenhuma lista de compras salva no momento',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),

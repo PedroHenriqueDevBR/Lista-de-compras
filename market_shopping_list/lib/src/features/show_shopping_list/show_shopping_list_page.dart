@@ -39,6 +39,9 @@ class SshoSshopping_listLatePage extends State<ShowShoppingListPage> {
     controller.isDone.addListener(() {
       setState(() {});
     });
+    controller.changeState.addListener(() {
+      setState(() {});
+    });
     controller.itens.addListener(() {
       controller.getTotal();
     });

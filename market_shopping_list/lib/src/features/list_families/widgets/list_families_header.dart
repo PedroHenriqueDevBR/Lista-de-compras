@@ -58,6 +58,7 @@ class ListFamiliesHeader extends StatelessWidget {
           ),
           SizedBox(height: 8.0),
           Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: child != null ? child : Container(),
           ),
         ],

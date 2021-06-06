@@ -15,6 +15,7 @@ class ShowShoppingListController {
   RxNotifier<bool> isDone = RxNotifier<bool>(false);
   RxNotifier<double> total = RxNotifier<double>(0.0);
   PurchaseItem purchaseItem = PurchaseItem.withNoData();
+  RxNotifier<bool> changeState = RxNotifier<bool>(false);
 
   IShoppingListStorage shoppingStorage;
   IPurchaseItemStorage itemStorage;
@@ -110,15 +111,17 @@ class ShowShoppingListController {
     }
   }
 
-  void goToEditShoppingListPage(BuildContext context) {
-    Navigator.push(
+  void goToEditShoppingListPage(BuildContext context) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CreateShoppingListPage(
           shoppingList: this.shoppingList.value,
         ),
       ),
-    );
+    ).then((_) {
+      changeState.value = !changeState.value;
+    });
   }
 
   String creationDate() {
