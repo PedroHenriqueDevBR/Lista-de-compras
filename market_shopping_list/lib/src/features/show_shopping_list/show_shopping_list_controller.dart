@@ -62,8 +62,13 @@ class ShowShoppingListController {
     try {
       int index = itens.indexOf(purchaseItem);
       if (index != -1) {
+        purchaseItem.productName = this.purchaseItem.productName;
+        purchaseItem.price = this.purchaseItem.price;
+        purchaseItem.quantity = this.purchaseItem.quantity;
         await itemStorage.updatePurchaseItem(purchaseItem);
         this.getAllItensFromShoppingList(shoppingList.value);
+        print('=' * 30);
+        print('Dados atualizados');
       } else {
         asuka.showSnackBar(asuka.AsukaSnackbar.warning('Item não localizado'));
       }

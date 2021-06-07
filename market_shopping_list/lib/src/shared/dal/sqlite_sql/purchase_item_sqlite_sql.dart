@@ -14,11 +14,11 @@ class PurchaseItemSQLite implements IPurchaseItemSQL {
   @override
   String updatePurchaseItem(PurchaseItem purchaseItem) {
     return '''
-      update purchase_item
-      set product_name = 'Arroz integral',
-      quantity = 2,
-      price = 22.50
-      where id = 1;
+      update ${DatabaseSQL.PURCHASE_ITEM}
+      set product_name = '${purchaseItem.productName}',
+      quantity = ${purchaseItem.quantity},
+      price = ${purchaseItem.price}
+      where id = ${purchaseItem.id};
     ''';
   }
 
