@@ -12,6 +12,7 @@ import 'package:market_shopping_list/src/shared/dal/sqlite_sql/shopping_list_sql
 import 'package:market_shopping_list/src/shared/models/family.dart';
 import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
 import 'package:rx_notifier/rx_notifier.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class ListFamiliesPage extends StatefulWidget {
   @override
@@ -24,31 +25,56 @@ class _ListFamiliesPageState extends State<ListFamiliesPage> {
     shoppingStorage: ShoppingListDAL(shoppingListSQL: ShoppingListSQLite(), purchaseItemSQL: PurchaseItemSQLite()),
   );
 
+  final BannerAd bottomBanner = BannerAd(
+    adUnitId: 'ca-app-pub-6362917365372020/5409897050',
+    size: AdSize.banner,
+    request: AdRequest(),
+    listener: BannerAdListener(),
+  );
+
+  @override
+  void initState() {
+    bottomBanner.load();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              RxBuilder(
-                builder: (_) => ListFamiliesHeader(
-                  size: size,
-                  pendingCount: controller.pendingShoppingListCount.value,
-                  child: RxBuilder(
-                    builder: (_) => familyList(
-                      size: size,
-                      families: controller.families,
-                      selectedFamily: controller.selectedFamily.value,
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    RxBuilder(
+                      builder: (_) => ListFamiliesHeader(
+                        size: size,
+                        pendingCount: controller.pendingShoppingListCount.value,
+                        child: RxBuilder(
+                          builder: (_) => familyList(
+                            size: size,
+                            families: controller.families,
+                            selectedFamily: controller.selectedFamily.value,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(height: 8.0),
+                    shoppingListWidget(),
+                  ],
                 ),
               ),
-              SizedBox(height: 8.0),
-              shoppingListWidget(),
-            ],
-          ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              child: AdWidget(ad: bottomBanner),
+              width: MediaQuery.of(context).size.width,
+              height: 75.0,
+            ),
+          ],
         ),
       ),
     );
