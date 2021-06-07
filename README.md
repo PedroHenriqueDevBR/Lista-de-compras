@@ -17,11 +17,7 @@ Aplicação desenvolvida para facilitar o controle dos gastos no momento das com
 
 <div>
 <img src="https://raw.githubusercontent.com/PedroHenriqueDevBR/app-market-shopping-list/main/docs/screenshots/flutter_01.png" width="210" />
-<img src="https://raw.githubusercontent.com/PedroHenriqueDevBR/app-market-shopping-list/main/docs/screenshots/flutter_02.png" width="210" />
-<img src="https://raw.githubusercontent.com/PedroHenriqueDevBR/app-market-shopping-list/main/docs/screenshots/flutter_03.png" width="210" />
-<img src="https://raw.githubusercontent.com/PedroHenriqueDevBR/app-market-shopping-list/main/docs/screenshots/flutter_04.png" width="210" />
 <img src="https://raw.githubusercontent.com/PedroHenriqueDevBR/app-market-shopping-list/main/docs/screenshots/flutter_05.png" width="210" />
-<img src="https://raw.githubusercontent.com/PedroHenriqueDevBR/app-market-shopping-list/main/docs/screenshots/flutter_06.png" width="210" />
 </div>
 
 Um dia fui fazer as compras com a minha mãe, fui ajudar ela a fazer as compras do mês, no decorrer das compras eu observei que ela utilizava a calculadora para manter o controle dos gastos, para saber exatamente o que estava sendo gasto, o método funciona, porém muitas dúvidas aparecem no decorrer das compras, já a única informação que possuimos no monento é o total das compras.
@@ -75,10 +71,10 @@ O desenvolvimento dessa aplicação utiliza como base as seguintes tecnologias e
 
 ```bash
 # Execute o comando abaixo e clone o repositório do projeto
-git clone ''
+git clone https://github.com/PedroHenriqueDevBR/app-market-shopping-list.git
 
 # Acesse o projeto
-cd ''
+cd app-market-shopping-list
 
 # Execute o comanmdo para obter as dependências do projeto
 flutter pub get 
@@ -101,3 +97,13 @@ flutter run
 - [x] Adicionar item em uma lista de compras;
 - [x] editar item em uma lista de compras;
 - [X] Remover item da lista de compras.
+
+<h2 id="screenshots">:iphone: Screenshots (All screenshots)</h2>
+
+<div>
+<img src="https://raw.githubusercontent.com/PedroHenriqueDevBR/app-market-shopping-list/main/docs/screenshots/flutter_01.png" width="210" />
+<img src="https://raw.githubusercontent.com/PedroHenriqueDevBR/app-market-shopping-list/main/docs/screenshots/flutter_02.png" width="210" />
+<img src="https://raw.githubusercontent.com/PedroHenriqueDevBR/app-market-shopping-list/main/docs/screenshots/flutter_04.png" width="210" />
+<img src="https://raw.githubusercontent.com/PedroHenriqueDevBR/app-market-shopping-list/main/docs/screenshots/flutter_05.png" width="210" />
+<img src="https://raw.githubusercontent.com/PedroHenriqueDevBR/app-market-shopping-list/main/docs/screenshots/flutter_06.png" width="210" />
+</div>
