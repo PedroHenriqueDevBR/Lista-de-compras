@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:market_shopping_list/src/core/colors_util.dart';
-import 'package:market_shopping_list/src/features/show_shopping_list/show_shopping_list_controller.dart';
-import 'package:market_shopping_list/src/features/show_shopping_list/widgets/dialogs_widget.dart';
-import 'package:market_shopping_list/src/features/show_shopping_list/widgets/header_widget.dart';
-import 'package:market_shopping_list/src/shared/dal/purchase_item_dal.dart';
-import 'package:market_shopping_list/src/shared/dal/shopping_list_dal.dart';
-import 'package:market_shopping_list/src/shared/dal/sqlite_sql/purchase_item_sqlite_sql.dart';
-import 'package:market_shopping_list/src/shared/dal/sqlite_sql/shopping_list_sqlite_sql.dart';
-import 'package:market_shopping_list/src/shared/models/purchase_item.dart';
-import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
-import 'package:asuka/asuka.dart' as asuka;
 import 'package:rx_notifier/rx_notifier.dart';
+
+import '../../shared/dal/purchase_item_dal.dart';
+import '../../shared/dal/shopping_list_dal.dart';
+import '../../shared/dal/sqlite_sql/purchase_item_sqlite_sql.dart';
+import '../../shared/dal/sqlite_sql/shopping_list_sqlite_sql.dart';
+import '../../shared/models/purchase_item.dart';
+import '../../shared/models/shopping_list.dart';
+import 'show_shopping_list_controller.dart';
+import 'widgets/dialogs_widget.dart';
+import 'widgets/header_widget.dart';
 
 class ShowShoppingListPage extends StatefulWidget {
   ShoppingList shopping;

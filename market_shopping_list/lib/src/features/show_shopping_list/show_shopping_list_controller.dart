@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 
-import 'package:market_shopping_list/src/features/create_shopping_list/create_shopping_list_page.dart';
-import 'package:market_shopping_list/src/shared/interfaces/purchase_item_storage_interface.dart';
-import 'package:market_shopping_list/src/shared/interfaces/shopping_list_interface.dart';
-import 'package:market_shopping_list/src/shared/models/purchase_item.dart';
-import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
+import '../../shared/interfaces/purchase_item_storage_interface.dart';
+import '../../shared/interfaces/shopping_list_interface.dart';
+import '../../shared/models/purchase_item.dart';
+import '../../shared/models/shopping_list.dart';
+import '../create_shopping_list/create_shopping_list_page.dart';
 
 class ShowShoppingListController {
   RxNotifier<ShoppingList> shoppingList = RxNotifier<ShoppingList>(ShoppingList.withNoData());

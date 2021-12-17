@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:market_shopping_list/src/core/colors_util.dart';
+import '../../../core/colors_util.dart';
 
 class ListFamiliesHeader extends StatelessWidget {
   Size size;

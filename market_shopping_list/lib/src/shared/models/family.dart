@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
+import 'shopping_list.dart';
 
 class Family {
   dynamic? id;

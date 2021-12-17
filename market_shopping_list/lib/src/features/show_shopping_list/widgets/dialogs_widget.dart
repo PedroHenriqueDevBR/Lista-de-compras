@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:asuka/asuka.dart' as asuka;
-import 'package:market_shopping_list/src/core/colors_util.dart';
-import 'package:market_shopping_list/src/shared/models/purchase_item.dart';
+import 'package:flutter/material.dart';
+import '../../../core/colors_util.dart';
+import '../../../shared/models/purchase_item.dart';
 
 class AppDialogs {
   static bool isNumeric(String? str) {

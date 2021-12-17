@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:market_shopping_list/src/core/colors_util.dart';
-import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
+import '../../../core/colors_util.dart';
+import '../../../shared/models/shopping_list.dart';
 
 class ShoppinglistItem extends StatelessWidget {
   ShoppingList shoppingList;

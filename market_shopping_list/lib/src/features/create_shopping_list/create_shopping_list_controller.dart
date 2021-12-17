@@ -1,12 +1,12 @@
 import 'package:asuka/asuka.dart' as asuka;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:market_shopping_list/src/features/create_family/create_family_page.dart';
-import 'package:market_shopping_list/src/shared/models/family.dart';
 import 'package:rx_notifier/rx_notifier.dart';
-import 'package:market_shopping_list/src/shared/interfaces/family_storage_interface.dart';
-import 'package:market_shopping_list/src/shared/interfaces/shopping_list_interface.dart';
-import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
+
+import '../../shared/interfaces/family_storage_interface.dart';
+import '../../shared/interfaces/shopping_list_interface.dart';
+import '../../shared/models/family.dart';
+import '../../shared/models/shopping_list.dart';
+import '../create_family/create_family_page.dart';
 
 class CreateShoppingListController {
   RxNotifier<ShoppingList> shopping = RxNotifier<ShoppingList>(ShoppingList.withNoData());

@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:market_shopping_list/src/core/colors_util.dart';
-import 'package:market_shopping_list/src/features/list_families/list_families_controller.dart';
-import 'package:market_shopping_list/src/features/list_families/widgets/family_item.dart';
-import 'package:market_shopping_list/src/features/list_families/widgets/list_families_header.dart';
-import 'package:market_shopping_list/src/features/list_families/widgets/shopping_list_item.dart';
-import 'package:market_shopping_list/src/shared/dal/family_dal.dart';
-import 'package:market_shopping_list/src/shared/dal/shopping_list_dal.dart';
-import 'package:market_shopping_list/src/shared/dal/sqlite_sql/family_sqlite_sql.dart';
-import 'package:market_shopping_list/src/shared/dal/sqlite_sql/purchase_item_sqlite_sql.dart';
-import 'package:market_shopping_list/src/shared/dal/sqlite_sql/shopping_list_sqlite_sql.dart';
-import 'package:market_shopping_list/src/shared/models/family.dart';
-import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
 import 'package:rx_notifier/rx_notifier.dart';
+
+import '../../core/colors_util.dart';
+import '../../shared/dal/family_dal.dart';
+import '../../shared/dal/shopping_list_dal.dart';
+import '../../shared/dal/sqlite_sql/family_sqlite_sql.dart';
+import '../../shared/dal/sqlite_sql/purchase_item_sqlite_sql.dart';
+import '../../shared/dal/sqlite_sql/shopping_list_sqlite_sql.dart';
+import '../../shared/models/family.dart';
+import '../../shared/models/shopping_list.dart';
+import 'list_families_controller.dart';
+import 'widgets/family_item.dart';
+import 'widgets/list_families_header.dart';
+import 'widgets/shopping_list_item.dart';
 
 class ListFamiliesPage extends StatefulWidget {
   @override
