@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:market_shopping_list/src/core/colors_util.dart';
-import 'package:market_shopping_list/src/features/show_shopping_list/widgets/dialogs_widget.dart';
+import '../../../core/colors_util.dart';
+import 'dialogs_widget.dart';
 
 class HeaderWidget extends StatelessWidget {
   String title;

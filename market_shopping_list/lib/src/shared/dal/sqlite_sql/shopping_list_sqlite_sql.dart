@@ -1,8 +1,8 @@
-import 'package:market_shopping_list/src/shared/dal/interfaces/shopping_list_sql_interface.dart';
-import 'package:market_shopping_list/src/shared/dal/sqlite_sql/database_sql.dart';
-import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
-import 'package:market_shopping_list/src/shared/models/purchase_item.dart';
-import 'package:market_shopping_list/src/shared/models/family.dart';
+import '../../models/family.dart';
+import '../../models/purchase_item.dart';
+import '../../models/shopping_list.dart';
+import '../interfaces/shopping_list_sql_interface.dart';
+import 'database_sql.dart';
 
 class ShoppingListSQLite implements IShoppingListSQL {
   @override

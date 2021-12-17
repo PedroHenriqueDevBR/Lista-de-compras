@@ -1,5 +1,5 @@
-import 'package:market_shopping_list/src/shared/models/family.dart';
-import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
+import '../models/family.dart';
+import '../models/shopping_list.dart';
 
 abstract class IFamilyStorage {
   Future<Family> createFamily(Family family);

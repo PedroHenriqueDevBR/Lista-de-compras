@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:market_shopping_list/src/shared/models/family.dart';
-import 'package:market_shopping_list/src/core/colors_util.dart';
+
+import '../../../core/colors_util.dart';
+import '../../../shared/models/family.dart';
 
 class CreateFamilyHeader extends StatelessWidget {
   GlobalKey<FormState> formKey;

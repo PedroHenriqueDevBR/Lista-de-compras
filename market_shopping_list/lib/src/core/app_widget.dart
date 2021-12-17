@@ -1,8 +1,9 @@
+import 'package:asuka/asuka.dart' as asuka;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:asuka/asuka.dart' as asuka;
-import 'package:market_shopping_list/src/core/colors_util.dart';
-import 'package:market_shopping_list/src/features/list_families/list_families_page.dart';
+
+import '../features/list_families/list_families_page.dart';
+import 'colors_util.dart';
 
 class AppWidget extends StatelessWidget {
   void changeNavigatorColor() {

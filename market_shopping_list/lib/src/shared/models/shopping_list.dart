@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:market_shopping_list/src/shared/models/purchase_item.dart';
+import 'purchase_item.dart';
 
 class ShoppingList {
   dynamic? id;

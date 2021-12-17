@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:market_shopping_list/src/core/colors_util.dart';
-import 'package:rx_notifier/rx_notifier.dart';
+import '../../../core/colors_util.dart';
 
-import 'package:market_shopping_list/src/shared/models/family.dart';
+import '../../../shared/models/family.dart';
 
 class FamilyItem extends StatelessWidget {
   Size size;
