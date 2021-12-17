@@ -1,18 +1,28 @@
+import 'dart:io' show Platform;
+
 import 'package:sqflite/sqflite.dart';
 
-import 'package:market_shopping_list/src/shared/dal/interfaces/purchase_item_sql_interface.dart';
-import 'package:market_shopping_list/src/shared/interfaces/purchase_item_storage_interface.dart';
-import 'package:market_shopping_list/src/shared/models/purchase_item.dart';
-import 'package:market_shopping_list/src/shared/models/shopping_list.dart';
-import 'package:market_shopping_list/src/shared/services/sqflite_connection.dart';
+import '../interfaces/purchase_item_storage_interface.dart';
+import '../models/purchase_item.dart';
+import '../models/shopping_list.dart';
+import '../services/connection_base.dart';
+import '../services/sqflite_connection.dart';
+import '../services/sqflite_connection_desktop.dart';
+import 'interfaces/purchase_item_sql_interface.dart';
 
 class PurchaseItemDAL implements IPurchaseItemStorage {
   IPurchaseItemSQL purchaseItemSQL;
-  SQFLiteConnection connection = SQFLiteConnection.instance;
+  late IConnectionBase connection;
 
   PurchaseItemDAL({
     required this.purchaseItemSQL,
-  });
+  }){
+    if (Platform.isAndroid) {
+      connection = SQFLiteConnection.instance;
+    } else {
+      connection = SQFLiteConnectionDesktop.instance;
+    }
+  }
 
   Future<Database> getDatabase() async {
     return await connection.db;
@@ -21,7 +31,7 @@ class PurchaseItemDAL implements IPurchaseItemStorage {
   @override
   Future<List<PurchaseItem>> getAllPurchaseItensFromShoppingList(ShoppingList shoppingList) async {
     try {
-      Database db = await getDatabase();
+      final db = await getDatabase();
       List<Map> response = await db.rawQuery(purchaseItemSQL.getAllPurchaseItensFromShoppingList(shoppingList));
       List<PurchaseItem> itens = [];
       for (Map item in response) {
@@ -36,8 +46,8 @@ class PurchaseItemDAL implements IPurchaseItemStorage {
   @override
   Future<PurchaseItem> updatePurchaseItem(PurchaseItem purchaseItem) async {
     try {
-      Database db = await getDatabase();
-      int affectedRows = await db.rawUpdate(purchaseItemSQL.updatePurchaseItem(purchaseItem));
+      final db = await getDatabase();
+      final affectedRows = await db.rawUpdate(purchaseItemSQL.updatePurchaseItem(purchaseItem));
       if (affectedRows > 0) {
         return purchaseItem;
       } else {
@@ -51,8 +61,8 @@ class PurchaseItemDAL implements IPurchaseItemStorage {
   @override
   Future<void> removePurchaseItem(PurchaseItem purchaseItem) async {
     try {
-      Database db = await getDatabase();
-      int affectedRows = await db.rawDelete(purchaseItemSQL.removePurchaseItem(purchaseItem));
+      final db = await getDatabase();
+      final affectedRows = await db.rawDelete(purchaseItemSQL.removePurchaseItem(purchaseItem));
       if (affectedRows == 0) {
         throw Exception('Nenhum dado afetado');
       }
@@ -64,7 +74,7 @@ class PurchaseItemDAL implements IPurchaseItemStorage {
   @override
   Future<void> deletePurchaseItemByShoppingList(ShoppingList shoppingList) async {
     try {
-      Database db = await getDatabase();
+      final db = await getDatabase();
       await db.rawDelete(purchaseItemSQL.deletePurchaseItemByShoppingList(shoppingList));
     } catch (error) {
       throw Exception(error);
