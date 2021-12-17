@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:asuka/asuka.dart' as asuka;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +18,7 @@ class AppWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    changeNavigatorColor();
+    if (Platform.isAndroid || Platform.isIOS) changeNavigatorColor();
     return MaterialApp(
       builder: asuka.builder,
       navigatorObservers: [asuka.asukaHeroController],
